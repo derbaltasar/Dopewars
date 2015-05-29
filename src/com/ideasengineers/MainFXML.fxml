@@ -17,18 +17,18 @@
                      <children>
                         <Label fx:id="regionField" text="Region" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Cash" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Dmg" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Health" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Label fx:id="cashField" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="dmgField" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="healthField" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Debt" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Agility" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Label fx:id="debtField" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Label fx:id="agilityField" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Bank" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Health" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Dmg" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Label fx:id="bankField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                        <Label fx:id="healthField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                        <Label text="Date" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+                        <Label fx:id="dmgField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Label fx:id="dateField" text="Date" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
                         <Label text="Space" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
                         <Label fx:id="spaceField" text="Label" GridPane.columnIndex="5" />
                      </children>
