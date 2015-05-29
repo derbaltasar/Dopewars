@@ -15,6 +15,9 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
     
+    private String defaultName = "default";
+    private int defaultHp = 100;
+    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"));
