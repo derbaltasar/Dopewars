@@ -10,7 +10,6 @@ import java.util.List;
 public class Region {
     
     private String name = "default";
-    private Integer id = 0;
     public ArrayList<Drug> drugs = new ArrayList<>();
     
 
@@ -20,14 +19,6 @@ public class Region {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }
     
