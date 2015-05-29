@@ -7,7 +7,6 @@ package com.ideasengineers;
 public class Drug {
     
     private String name = "default";
-    private Integer id = 0;
     private double value = 0.0;
     private double min = 0.0;
     private double max = 0.0;
@@ -22,14 +21,6 @@ public class Drug {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public double getValue() {
