@@ -28,16 +28,16 @@ public class MainFXMLController implements Initializable {
     @FXML private TableColumn<?, ?> nameMarketRow;
     @FXML private TableView<?> marketTable;
     @FXML private Label regionField;
-    @FXML private Label gunsField;
     @FXML private Label debtField;
+    @FXML private Label cashField;
     @FXML private TextArea logField;
     @FXML private TableView<?> pocketTable;
     @FXML private TableColumn<?, ?> countRow;
     @FXML private TableColumn<?, ?> namePocketRow;
-    @FXML private Label spaceField;
-    @FXML private Label healthField;
-    @FXML private Label cashField;
-    @FXML private Label bitchesField;
+    @FXML private Label spaceField;         // Noch freier Platz für Drogen
+    @FXML private Label healthField;        // Verbleibende Lebenspunkte
+    @FXML private Label dmgField;           // Gesamtschaden der Waffen
+    @FXML private Label agilityField;       // Treffsicherheit
 
     
     @FXML

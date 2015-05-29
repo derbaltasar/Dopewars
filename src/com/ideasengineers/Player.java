@@ -17,10 +17,10 @@ public class Player {
     private double hp = 100;
     private double cash = 5000;
     private double dmg = 0;
-    private double agility = 0.5;
+    private double agility = 0.05;
     private int maxGuns = 6;        // maximale Anzahl an Waffen
     private int maxDrugs = 100;     // maximale Anzahl an Drogen
-    private int region = 0;
+    private Region region = new Region();
     private Gun[] gunPocket = new Gun[maxGuns];
     private Drug[] drugPocket = new Drug[maxDrugs];
 

@@ -7,7 +7,6 @@ package com.ideasengineers;
 public class Drug {
     
     private String name = "default";
-    private Integer id = 0;
     private double value = 0.0;     // aktueller Verkaufswert
     private double min = 0.0;       // minimaler VK
     private double max = 0.0;       // maximaler VK
