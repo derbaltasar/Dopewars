@@ -13,6 +13,9 @@ public class Drug {
     private double max = 0.0;
     private double reference = 0.0;
 
+    public Drug() {
+    }
+
     public String getName() {
         return name;
     }

@@ -1,10 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<TitledPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="844.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+<BorderPane prefHeight="400.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <GridPane hgap="10.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label fx:id="regionField" text="Region" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Cash" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Guns" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label fx:id="cashField" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="gunsField" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Debt" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Bitches" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label fx:id="debtField" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label fx:id="bitchesField" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Bank" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Health" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label fx:id="bankField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Label fx:id="healthField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Label text="Date" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+                        <Label text="Space" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
+                        <Label fx:id="spaceField" text="Label" GridPane.columnIndex="5" />
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+               </center>
+            </BorderPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <TextArea fx:id="logField" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <VBox alignment="CENTER" maxWidth="110.0" minWidth="110.0" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button contentDisplay="CENTER" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Buy -&gt;" textAlignment="CENTER" />
+                        <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="&lt;- Sell" />
+                        <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Drop -&lt;" />
+                        <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Jet!" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+               </center>
+               <left>
+                  <TableView fx:id="marketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <columns>
+                        <TableColumn fx:id="nameMarketRow" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="priceRow" prefWidth="75.0" text="Price" />
+                     </columns>
+                  </TableView>
+               </left>
+               <right>
+                  <TableView fx:id="pocketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <columns>
+                        <TableColumn fx:id="namePocketRow" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="countRow" prefWidth="75.0" text="count" />
+                     </columns>
+                  </TableView>
+               </right>
+            </BorderPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
