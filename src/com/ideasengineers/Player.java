@@ -13,13 +13,14 @@ import java.util.ArrayList;
  */
 public class Player {
 
-    private String name = "";
-    private double hp = 0;
-    private double cash = 0;
+    private String name = "default";
+    private double hp = 100;
+    private double cash = 5000;
     private double dmg = 0;
-    private double agility = 0;
+    private double agility = 0.5;
     private int maxGuns = 6;        // maximale Anzahl an Waffen
     private int maxDrugs = 100;     // maximale Anzahl an Drogen
+    private int region = 0;
     private Gun[] gunPocket = new Gun[maxGuns];
     private Drug[] drugPocket = new Drug[maxDrugs];
 
