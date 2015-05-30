@@ -42,6 +42,7 @@ public class MainFXMLController implements Initializable {
     @FXML private TableView<Drug> pocketTable;
     @FXML private TableColumn<Drug, String> countRow;
     @FXML private TableColumn<Drug, String> namePocketRow;
+    @FXML private TableColumn<Drug, String> avgPrice;
     @FXML private Label spaceField;         // Noch freier Platz für Drogen
     @FXML private Label healthField;        // Verbleibende Lebenspunkte
     @FXML private Label dmgField;           // Gesamtschaden der Waffen
@@ -84,7 +85,8 @@ public class MainFXMLController implements Initializable {
         marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
-        marketTable.setItems(activePlayer.getDrugPocket());
+        avgPrice.setCellFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.get)));
+        pocketTable.setItems(activePlayer.getDrugPocket());
     }
     
     private void initRegions() {
