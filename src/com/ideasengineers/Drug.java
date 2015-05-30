@@ -18,6 +18,7 @@ public class Drug {
     private static Random rnd = new Random();
     private boolean available = true;
     private Integer count = 0;
+    private double avgPrice = 0;
 
     public Integer getCount() {
         return count;
@@ -106,5 +107,15 @@ public class Drug {
         }
         return (int) ((a - b) * Math.random() + b);
     }
+
+    public double getAvgPrice() {
+        return avgPrice;
+    }
+
+    public void setAvgPrice(double avgPrice) {
+        this.avgPrice = avgPrice;
+    }
+    
+    
     
 }

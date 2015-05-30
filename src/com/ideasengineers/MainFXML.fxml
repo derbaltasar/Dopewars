@@ -79,10 +79,11 @@
                   </TableView>
                </left>
                <right>
-                  <TableView fx:id="pocketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" >
+                  <TableView fx:id="pocketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <columns>
-                        <TableColumn fx:id="namePocketRow" prefWidth="75.0" text="Name"  />
-                        <TableColumn fx:id="countRow" prefWidth="75.0" text="count" />
+                        <TableColumn fx:id="namePocketRow" prefWidth="65.0" text="Name" />
+                        <TableColumn fx:id="countRow" prefWidth="65.0" text="count" />
+                        <TableColumn fx:id="avgPrice" prefWidth="65.0" text="Price" />
                      </columns>
                   </TableView>
                </right>

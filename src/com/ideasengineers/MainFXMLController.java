@@ -61,6 +61,8 @@ public class MainFXMLController implements Initializable {
             b.generateNewValue();
         }
         
+        regionField.setText(activePlayer.getActiveRegion().getName());
+        bankField.setText(String.valueOf(activePlayer.getCash()));
         
     }
     
@@ -85,8 +87,10 @@ public class MainFXMLController implements Initializable {
         marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
-        avgPrice.setCellFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.get)));
         pocketTable.setItems(activePlayer.getDrugPocket());
+        
+        regionField.setText(activePlayer.getActiveRegion().getName());
+        bankField.setText(String.valueOf(activePlayer.getCash()));
     }
     
     private void initRegions() {
