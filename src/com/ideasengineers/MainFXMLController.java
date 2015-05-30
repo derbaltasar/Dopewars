@@ -61,8 +61,21 @@ public class MainFXMLController implements Initializable {
             b.generateNewValue();
         }
         
+        nameMarketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
+        priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getValue())));
+        marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
+        namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
+        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
+        pocketTable.setItems(activePlayer.getDrugPocket());
+        
         regionField.setText(activePlayer.getActiveRegion().getName());
         bankField.setText(String.valueOf(activePlayer.getCash()));
+        cashField.setText(Double.toString(activePlayer.getCash()));
+        debtField.setText(Double.toString(activePlayer.getDept()));
+        healthField.setText(Double.toString(activePlayer.getHp()));
+        agilityField.setText(Double.toString(activePlayer.getAgility()));
+        dmgField.setText(Double.toString(activePlayer.getDmg()));
+        spaceField.setText(Integer.toString(activePlayer.getDrugPocket().size()));
         
     }
     
@@ -91,23 +104,23 @@ public class MainFXMLController implements Initializable {
         
         regionField.setText(activePlayer.getActiveRegion().getName());
         bankField.setText(String.valueOf(activePlayer.getCash()));
+        cashField.setText(Double.toString(activePlayer.getCash()));
+        debtField.setText(Double.toString(activePlayer.getDept()));
+        healthField.setText(Double.toString(activePlayer.getHp()));
+        agilityField.setText(Double.toString(activePlayer.getAgility()));
+        dmgField.setText(Double.toString(activePlayer.getDmg()));
+        spaceField.setText(Integer.toString(activePlayer.getDrugPocket().size()));
     }
     
     private void initRegions() {
-        Region kreuzberg = new Region();
-        Region fhain = new Region();
-        Region wedding = new Region();
-        Region neukoelln = new Region();
-        Region charlotten = new Region();
-        Region mitte = new Region();
-        Region reinicken = new Region();
-        kreuzberg.setName("Kreuzberg");
-        fhain.setName("Friedrichshain");
-        wedding.setName("Wedding");
-        neukoelln.setName("Neu-Kölln");
-        charlotten.setName("Charlottenburg");
-        mitte.setName("Berlin-Mitte");
-        reinicken.setName("Reinickendorf");
+        Region kreuzberg = new Region("Kreuzberg");
+        Region fhain = new Region("Friedrichshain");
+        Region wedding = new Region("Wedding");
+        Region neukoelln = new Region("Neu-Kölln");
+        Region charlotten = new Region("Charlottenburg");
+        Region mitte = new Region("Berlin-Mitte");
+        Region reinicken = new Region("Reinickendorf");
+        
         Region.regions.add(kreuzberg);
         Region.regions.add(fhain);
         Region.regions.add(wedding);
@@ -121,54 +134,19 @@ public class MainFXMLController implements Initializable {
     }
     
     private void initDrugs() {
-        Drug lsd = new Drug();
-        Drug kokain = new Drug();
-        Drug heroin3 = new Drug();
-        Drug cannabis = new Drug();
-        Drug hash = new Drug();
-        Drug mdma = new Drug();
-        Drug gbl = new Drug();
-        Drug speed = new Drug();
-        Drug crystal = new Drug();
-        Drug cb2 = new Drug();
-        Drug methadon = new Drug();
-        Drug polamidon = new Drug();
-        lsd.setName(new SimpleStringProperty("Lysergsäurediethylamid"));
-        lsd.setMin(1000);
-        lsd.setMax(100000);
-        kokain.setName(new SimpleStringProperty("Kokain"));
-        kokain.setMin(25);
-        kokain.setMax(150);
-        heroin3.setName(new SimpleStringProperty("Heroin#3"));
-        heroin3.setMin(10);
-        heroin3.setMax(100);
-        cannabis.setName(new SimpleStringProperty("Cannabis"));
-        cannabis.setMin(2);
-        cannabis.setMax(20);
-        hash.setName(new SimpleStringProperty("Haschisch"));
-        hash.setMin(1);
-        hash.setMax(50);
-        mdma.setName(new SimpleStringProperty("MDMA"));
-        mdma.setMin(15);
-        mdma.setMax(85);
-        gbl.setName(new SimpleStringProperty("Gammabutyrolacton"));
-        gbl.setMin(0.05);
-        gbl.setMax(3);
-        speed.setName(new SimpleStringProperty("Amphetamin (Speed, Pep)"));
-        speed.setMin(0.5);
-        speed.setMax(30);
-        crystal.setName(new SimpleStringProperty("Methamphetamin (Crystal, Meth)"));
-        crystal.setMin(25);
-        crystal.setMax(125);
-        cb2.setName(new SimpleStringProperty("4-Brom-2,5-dimethoxyphenylehthylamin (2-CB)"));
-        cb2.setMin(20);
-        cb2.setMax(200);
-        methadon.setName(new SimpleStringProperty("Methadon"));
-        methadon.setMin(2.5);
-        methadon.setMax(35);
-        polamidon.setName(new SimpleStringProperty("Polamidon"));
-        polamidon.setMin(5);
-        polamidon.setMax(70);
+        Drug lsd = new Drug(new SimpleStringProperty("Lysergsäurediethylamid"), 1000, 100000);
+        Drug kokain = new Drug(new SimpleStringProperty("Kokain"), 25, 150);
+        Drug heroin3 = new Drug(new SimpleStringProperty("Heroin#3"), 10, 100);
+        Drug cannabis = new Drug(new SimpleStringProperty("Cannabis"), 2, 20);
+        Drug hash = new Drug(new SimpleStringProperty("Haschisch"), 1, 50);
+        Drug mdma = new Drug(new SimpleStringProperty("MDMA"), 15, 85);
+        Drug gbl = new Drug(new SimpleStringProperty("Gammabutyrolacton"), 0.05, 30);
+        Drug speed = new Drug(new SimpleStringProperty("Amphetamin (Speed, Pep)"), 0.5, 30);
+        Drug crystal = new Drug(new SimpleStringProperty("Methamphetamin (Crystal, Meth)"), 25, 125);
+        Drug cb2 = new Drug(new SimpleStringProperty("4-Brom-2,5-dimethoxyphenylehthylamin (2-CB)"), 20, 200);
+        Drug methadon = new Drug(new SimpleStringProperty("Methadon"), 2.5, 35);
+        Drug polamidon = new Drug(new SimpleStringProperty("Polamidon"), 5, 70);
+        
         newOffers.add(lsd);
         newOffers.add(kokain);
         newOffers.add(heroin3);
@@ -181,8 +159,7 @@ public class MainFXMLController implements Initializable {
         newOffers.add(cb2);
         newOffers.add(methadon);
         newOffers.add(polamidon);
-    }
-    
+    }    
     
     private double randomDoubleMinMax(double a, double b) {
         if(a < b) {

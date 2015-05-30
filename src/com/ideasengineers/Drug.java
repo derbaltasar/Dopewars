@@ -20,15 +20,20 @@ public class Drug {
     private Integer count = 0;
     private double avgPrice = 0;
 
+    public Drug(StringProperty name, double min, double max) {
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.reference = (min + max) / 2;
+        this.value = generateDrugPrice(this.reference);
+    }
+    
     public Integer getCount() {
         return count;
     }
 
     public void setCount(Integer count) {
         this.count = count;
-    }
-
-    public Drug() {
     }
 
     public StringProperty getName() {
