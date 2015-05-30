@@ -11,7 +11,7 @@ public class Region {
     
     private String name = "default";
     public ArrayList<Drug> drugs = new ArrayList<>();
-    
+    public static ArrayList<Region> regions = new ArrayList<>();
 
     public String getName() {
         return name;

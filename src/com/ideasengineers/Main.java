@@ -15,12 +15,14 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
     
+    
+    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MainFXML.fxml"));
         
         Scene scene = new Scene(root);
-        
+        //System.out.println(Math.random());
         stage.setScene(scene);
         stage.show();
     }

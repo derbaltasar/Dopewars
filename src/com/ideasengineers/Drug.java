@@ -10,7 +10,7 @@ public class Drug {
     private double value = 0.0;     // aktueller Verkaufswert
     private double min = 0.0;       // minimaler VK
     private double max = 0.0;       // maximaler VK
-    private double reference = 0.0; // Richtpreis
+    private double reference = (min + max) / 2; // Richtpreis
 
     public Drug() {
     }
