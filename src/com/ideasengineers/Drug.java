@@ -1,6 +1,8 @@
 package com.ideasengineers;
 
 import java.util.Random;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -8,21 +10,31 @@ import java.util.Random;
  */
 public class Drug {
     
-    private String name = "default";
+    private StringProperty name = new SimpleStringProperty("default");
     private double value = 0.0;     // aktueller Verkaufswert
     private double min = 0.0;       // minimaler VK
     private double max = 0.0;       // maximaler VK
     private double reference = (min + max) / 2; // Richtpreis
     private static Random rnd = new Random();
+    private boolean available = true;
+    private Integer count = 0;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public Drug() {
     }
 
-    public String getName() {
+    public StringProperty getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(StringProperty name) {
         this.name = name;
     }
 
@@ -59,7 +71,8 @@ public class Drug {
     }
     
     public void generateNewValue() {
-        
+        value = generateDrugPrice(reference);
+        available = rnd.nextBoolean();
     }
     
     

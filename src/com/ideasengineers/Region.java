@@ -3,6 +3,8 @@ package com.ideasengineers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -11,14 +13,14 @@ import java.util.Random;
 public class Region {
     
     private String name = "default";
-    private ArrayList<Drug> drugs = new ArrayList<>();
+    private ObservableList<Drug> drugs = FXCollections.observableArrayList();
     private Random rnd = new Random();
 
-    public ArrayList<Drug> getDrugs() {
+    public ObservableList<Drug> getDrugs() {
         return drugs;
     }
 
-    public void setDrugs(ArrayList<Drug> drugs) {
+    public void setDrugs(ObservableList<Drug> drugs) {
         this.drugs = drugs;
     }
     public static ArrayList<Region> regions = new ArrayList<>();
@@ -32,8 +34,7 @@ public class Region {
     }
     
     public void randomEvent() {
-        
-        
+                
     }
     
 }

@@ -6,6 +6,8 @@ package com.ideasengineers;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -20,9 +22,10 @@ public class Player {
     private double agility = 0.05;
     private int maxGuns = 6;        // maximale Anzahl an Waffen
     private int maxDrugs = 100;     // maximale Anzahl an Drogen
-    private Region region = new Region();
+    private Region activeRegion;
     private Gun[] gunPocket = new Gun[maxGuns];
-    private Drug[] drugPocket = new Drug[maxDrugs];
+    private ObservableList<Drug> drugPocket = FXCollections.observableArrayList();
+    
 
     public void Player(String name, double hp, double cash, double agility) {
         this.name = name;
@@ -55,7 +58,7 @@ public class Player {
         return gunPocket;
     }
 
-    public Drug[] getDrugPocket() {
+    public ObservableList<Drug> getDrugPocket() {
         return drugPocket;
     }
 
@@ -83,7 +86,7 @@ public class Player {
         this.gunPocket = gunPocket;
     }
 
-    public void setDrugPocket(Drug[] drogPocket) {
+    public void setDrugPocket(ObservableList<Drug> drogPocket) {
         this.drugPocket = drogPocket;
     }
 
@@ -101,6 +104,14 @@ public class Player {
 
     public void setMaxDrugs(int maxDrugs) {
         this.maxDrugs = maxDrugs;
+    }
+
+    public Region getActiveRegion() {
+        return activeRegion;
+    }
+
+    public void setActiveRegion(Region activeRegion) {
+        this.activeRegion = activeRegion;
     }
     
     

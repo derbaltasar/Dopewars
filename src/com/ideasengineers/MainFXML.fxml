@@ -63,7 +63,7 @@
                         <Button contentDisplay="CENTER" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Buy -&gt;" textAlignment="CENTER" />
                         <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="&lt;- Sell" />
                         <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" text="Drop -&lt;" />
-                        <Button fx:id="jetBtn" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Jet!" />
+                        <Button fx:id="jetBtn" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#jetBtnAction" text="Jet!" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />
@@ -79,9 +79,9 @@
                   </TableView>
                </left>
                <right>
-                  <TableView fx:id="pocketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="pocketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" >
                      <columns>
-                        <TableColumn fx:id="namePocketRow" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="namePocketRow" prefWidth="75.0" text="Name"  />
                         <TableColumn fx:id="countRow" prefWidth="75.0" text="count" />
                      </columns>
                   </TableView>

@@ -7,6 +7,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,8 +19,11 @@ import javafx.scene.control.Label;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 /**
  *
@@ -23,39 +31,60 @@ import javafx.scene.control.TextArea;
  */
 public class MainFXMLController implements Initializable {
 
-    @FXML private TableColumn<?, ?> priceRow;
+    @FXML private TableColumn<Drug, String> priceRow;
     @FXML private Label bankField;
-    @FXML private TableColumn<?, ?> nameMarketRow;
-    @FXML private TableView<?> marketTable;
+    @FXML private TableColumn<Drug, String> nameMarketRow;
+    @FXML private TableView<Drug> marketTable;
     @FXML private Label regionField;
     @FXML private Label debtField;
     @FXML private Label cashField;
     @FXML private TextArea logField;
-    @FXML private TableView<?> pocketTable;
-    @FXML private TableColumn<?, ?> countRow;
-    @FXML private TableColumn<?, ?> namePocketRow;
+    @FXML private TableView<Drug> pocketTable;
+    @FXML private TableColumn<Drug, String> countRow;
+    @FXML private TableColumn<Drug, String> namePocketRow;
     @FXML private Label spaceField;         // Noch freier Platz für Drogen
     @FXML private Label healthField;        // Verbleibende Lebenspunkte
     @FXML private Label dmgField;           // Gesamtschaden der Waffen
     @FXML private Label agilityField;       // Treffsicherheit
 
-    private ArrayList<Drug> newOffers = new ArrayList<>();
+    private ObservableList<Drug> newOffers = FXCollections.observableArrayList();
     private Random rnd = new Random();
+    private Player activePlayer;
     
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void jetBtnAction(ActionEvent event) {
         
-         
+        activePlayer.setActiveRegion(chooseRegion());
+        
+        for(Drug b : activePlayer.getActiveRegion().getDrugs()) {
+            b.generateNewValue();
+        }
         
         
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        activePlayer = new Player();
+        Random rnd = new Random();
         
         initDrugs();
         initRegions();
         
+        activePlayer.setActiveRegion(Region.regions.get(rnd.nextInt(Region.regions.size() - 1)));
+        System.out.println("Set Region to " + activePlayer.getActiveRegion().getName());
+        
+        for(Drug b : activePlayer.getActiveRegion().getDrugs()) {
+            b.generateNewValue();
+            System.out.println("GEN " + b.getName() + ": " + b.getValue());
+        }
+        
+        nameMarketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
+        priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getValue())));
+        marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
+        namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
+        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
+        marketTable.setItems(activePlayer.getDrugPocket());
     }
     
     private void initRegions() {
@@ -98,40 +127,40 @@ public class MainFXMLController implements Initializable {
         Drug cb2 = new Drug();
         Drug methadon = new Drug();
         Drug polamidon = new Drug();
-        lsd.setName("Lysergsäurediethylamid");
+        lsd.setName(new SimpleStringProperty("Lysergsäurediethylamid"));
         lsd.setMin(1000);
         lsd.setMax(100000);
-        kokain.setName("Kokain");
+        kokain.setName(new SimpleStringProperty("Kokain"));
         kokain.setMin(25);
         kokain.setMax(150);
-        heroin3.setName("Heroin#3");
+        heroin3.setName(new SimpleStringProperty("Heroin#3"));
         heroin3.setMin(10);
         heroin3.setMax(100);
-        cannabis.setName("Cannabis");
+        cannabis.setName(new SimpleStringProperty("Cannabis"));
         cannabis.setMin(2);
         cannabis.setMax(20);
-        hash.setName("Haschisch");
+        hash.setName(new SimpleStringProperty("Haschisch"));
         hash.setMin(1);
         hash.setMax(50);
-        mdma.setName("MDMA");
+        mdma.setName(new SimpleStringProperty("MDMA"));
         mdma.setMin(15);
         mdma.setMax(85);
-        gbl.setName("Gammabutyrolacton");
+        gbl.setName(new SimpleStringProperty("Gammabutyrolacton"));
         gbl.setMin(0.05);
         gbl.setMax(3);
-        speed.setName("Amphetamin (Speed, Pep)");
+        speed.setName(new SimpleStringProperty("Amphetamin (Speed, Pep)"));
         speed.setMin(0.5);
         speed.setMax(30);
-        crystal.setName("Methamphetamin (Crystal, Meth)");
+        crystal.setName(new SimpleStringProperty("Methamphetamin (Crystal, Meth)"));
         crystal.setMin(25);
         crystal.setMax(125);
-        cb2.setName("4-Brom-2,5-dimethoxyphenylehthylamin (2-CB)");
+        cb2.setName(new SimpleStringProperty("4-Brom-2,5-dimethoxyphenylehthylamin (2-CB)"));
         cb2.setMin(20);
         cb2.setMax(200);
-        methadon.setName("Methadon");
+        methadon.setName(new SimpleStringProperty("Methadon"));
         methadon.setMin(2.5);
         methadon.setMax(35);
-        polamidon.setName("Polamidon");
+        polamidon.setName(new SimpleStringProperty("Polamidon"));
         polamidon.setMin(5);
         polamidon.setMax(70);
         newOffers.add(lsd);
@@ -156,5 +185,15 @@ public class MainFXMLController implements Initializable {
         return (a - b) * Math.random() + b;
     }
     
+    private int randomIntMinMax(int a, int b) {
+        if(a < b) {
+            return (int) ((b - a) * Math.random() + a);
+        }
+        return (int) ((a - b) * Math.random() + b);
+    }
+    
+    private Region chooseRegion() {
+        return Region.regions.get(rnd.nextInt(Region.regions.size()));
+    }
     
 }
