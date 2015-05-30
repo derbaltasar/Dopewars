@@ -4,6 +4,8 @@
 package com.ideasengineers;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,8 +22,6 @@ import javafx.scene.control.TextArea;
  * @author Marc Zicchino
  */
 public class MainFXMLController implements Initializable {
-    
-    
 
     @FXML private TableColumn<?, ?> priceRow;
     @FXML private Label bankField;
@@ -39,20 +39,23 @@ public class MainFXMLController implements Initializable {
     @FXML private Label dmgField;           // Gesamtschaden der Waffen
     @FXML private Label agilityField;       // Treffsicherheit
 
-    private Drug[] newOffers = new Drug[1];
+    private ArrayList<Drug> newOffers = new ArrayList<>();
+    private Random rnd = new Random();
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
+        
+         
         
         
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        double rnd = Math.random();
-        initRegions();
+        
         initDrugs();
-        initRnd(rnd);
+        initRegions();
+        
     }
     
     private void initRegions() {
@@ -77,12 +80,15 @@ public class MainFXMLController implements Initializable {
         Region.regions.add(charlotten);
         Region.regions.add(mitte);
         Region.regions.add(reinicken);
+        for(Region r : Region.regions) {
+            r.setDrugs(newOffers);
+        }
     }
     
     private void initDrugs() {
         Drug lsd = new Drug();
         Drug kokain = new Drug();
-        Drug heroin = new Drug();
+        Drug heroin3 = new Drug();
         Drug cannabis = new Drug();
         Drug hash = new Drug();
         Drug mdma = new Drug();
@@ -96,29 +102,59 @@ public class MainFXMLController implements Initializable {
         lsd.setMin(1000);
         lsd.setMax(100000);
         kokain.setName("Kokain");
-        heroin.setName("Heroin#3");
+        kokain.setMin(25);
+        kokain.setMax(150);
+        heroin3.setName("Heroin#3");
+        heroin3.setMin(10);
+        heroin3.setMax(100);
         cannabis.setName("Cannabis");
+        cannabis.setMin(2);
+        cannabis.setMax(20);
         hash.setName("Haschisch");
+        hash.setMin(1);
+        hash.setMax(50);
         mdma.setName("MDMA");
+        mdma.setMin(15);
+        mdma.setMax(85);
         gbl.setName("Gammabutyrolacton");
+        gbl.setMin(0.05);
+        gbl.setMax(3);
         speed.setName("Amphetamin (Speed, Pep)");
+        speed.setMin(0.5);
+        speed.setMax(30);
         crystal.setName("Methamphetamin (Crystal, Meth)");
+        crystal.setMin(25);
+        crystal.setMax(125);
         cb2.setName("4-Brom-2,5-dimethoxyphenylehthylamin (2-CB)");
+        cb2.setMin(20);
+        cb2.setMax(200);
         methadon.setName("Methadon");
+        methadon.setMin(2.5);
+        methadon.setMax(35);
         polamidon.setName("Polamidon");
+        polamidon.setMin(5);
+        polamidon.setMax(70);
+        newOffers.add(lsd);
+        newOffers.add(kokain);
+        newOffers.add(heroin3);
+        newOffers.add(cannabis);
+        newOffers.add(hash);
+        newOffers.add(mdma);
+        newOffers.add(gbl);
+        newOffers.add(speed);
+        newOffers.add(crystal);
+        newOffers.add(cb2);
+        newOffers.add(methadon);
+        newOffers.add(polamidon);
     }
     
-    private void initRnd(Double rnd) {
-        if(rnd >= 0 && rnd < 0.25) {
-            
+    
+    private double randomDoubleMinMax(double a, double b) {
+        if(a < b) {
+            return (b - a) * Math.random() + a;
         }
+        return (a - b) * Math.random() + b;
     }
     
-    private double randomValue(int a, int b) {
-        return 0.0;
-    }
     
-    private int randomIntMinMax(int a, int b) {
-        return 1;
-    }
 }

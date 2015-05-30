@@ -1,5 +1,7 @@
 package com.ideasengineers;
 
+import java.util.Random;
+
 /**
  *
  * @author philipp
@@ -11,6 +13,7 @@ public class Drug {
     private double min = 0.0;       // minimaler VK
     private double max = 0.0;       // maximaler VK
     private double reference = (min + max) / 2; // Richtpreis
+    private static Random rnd = new Random();
 
     public Drug() {
     }
@@ -57,6 +60,38 @@ public class Drug {
     
     public void generateNewValue() {
         
+    }
+    
+    
+    private static double generateDrugPrice(Double reference) {
+        
+        double decisionValue = rnd.nextDouble();
+        
+        if(decisionValue > 0 && decisionValue <= 0.3) {
+            return (reference - (reference / 100 * decisionValue));
+        } else if(decisionValue > 0.3 && decisionValue <= 0.6) {
+            return (reference + (reference / 100 * decisionValue));
+        } else if(decisionValue > 0.6 && decisionValue <= 0.7) {
+            return (reference - (reference / 10 * decisionValue));
+        } else if(decisionValue > 0.7 && decisionValue <= 0.8) {
+            return (reference + (reference / 10 * decisionValue));
+        } else if(decisionValue > 0.8 && decisionValue <= 0.85) {
+            return (reference - (reference * decisionValue));
+        } else if(decisionValue > 0.85 && decisionValue <= 0.9) {
+            return (reference + (reference * decisionValue));
+        } else if(decisionValue > 0.9 && decisionValue <= 0.95) {
+            return (reference + (reference * (decisionValue + 1)));
+        } else {
+            return (reference - (reference * (decisionValue + 1)));
+        }
+        
+    }
+    
+    private int randomIntMinMax(int a, int b) {
+        if(a < b) {
+            return (int) ((b - a) * Math.random() + a);
+        }
+        return (int) ((a - b) * Math.random() + b);
     }
     
 }
