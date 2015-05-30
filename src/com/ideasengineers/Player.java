@@ -25,7 +25,6 @@ public class Player {
     private int maxDrugs = 100;     // maximale Anzahl an Drogen
     private Region activeRegion;
     private Gun[] gunPocket = new Gun[maxGuns];
-    private ObservableList<Drug> drugPocket = FXCollections.observableArrayList();
     
 
     public void Player(String name, double hp, double cash, double agility) {
@@ -59,10 +58,6 @@ public class Player {
         return gunPocket;
     }
 
-    public ObservableList<Drug> getDrugPocket() {
-        return drugPocket;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -85,10 +80,6 @@ public class Player {
 
     public void setGunPocket(Gun[] gunPocket) {
         this.gunPocket = gunPocket;
-    }
-
-    public void setDrugPocket(ObservableList<Drug> drogPocket) {
-        this.drugPocket = drogPocket;
     }
 
     public int getMaxGuns() {

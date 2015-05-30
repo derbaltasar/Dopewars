@@ -3,6 +3,7 @@ package com.ideasengineers;
 import java.util.Random;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import jdk.nashorn.internal.runtime.ECMAErrors;
 
 /**
  *
@@ -11,11 +12,11 @@ import javafx.beans.property.StringProperty;
 public class Drug {
     
     private StringProperty name = new SimpleStringProperty("default");
-    private double value = 0.0;     // aktueller Verkaufswert
     private double min = 0.0;       // minimaler VK
     private double max = 0.0;       // maximaler VK
     private double reference = (min + max) / 2; // Richtpreis
     private static Random rnd = new Random();
+    private double value = generateDrugPrice(reference);     // aktueller Verkaufswert
     private boolean available = true;
     private Integer count = 0;
     private double avgPrice = 0;
@@ -77,8 +78,8 @@ public class Drug {
     }
     
     public void generateNewValue() {
-        value = generateDrugPrice(reference);
-        available = rnd.nextBoolean();
+        this.value = generateDrugPrice(reference);
+        this.available = rnd.nextBoolean();
     }
     
     
@@ -101,7 +102,7 @@ public class Drug {
         } else if(decisionValue > 0.9 && decisionValue <= 0.95) {
             return (reference + (reference * (decisionValue + 1)));
         } else {
-            return (reference - (reference * (decisionValue + 1)));
+            return (reference - (reference * decisionValue + 1));
         }
         
     }
