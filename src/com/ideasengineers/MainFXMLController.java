@@ -3,8 +3,10 @@
  */
 package com.ideasengineers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -12,7 +14,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -22,7 +26,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 /**
@@ -86,10 +92,48 @@ public class MainFXMLController implements Initializable {
         marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
-        pocketTable.setItems(activePlayer.getDrugPocket());
+        
+        FilteredList<Drug> drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(line -> { //only show if Region is NOT NULL
+                if (line != line) {
+                    return false;
+                }
+                return line.getCount() != 0;
+            });
+        pocketTable.setItems(drugsPocket);
         
         regionField.setText(activePlayer.getActiveRegion().getName());
         bankField.setText(String.valueOf(activePlayer.getCash()));
+        
+    }
+    
+    @FXML
+    void buyBtnAction(ActionEvent event) {
+
+        Drug selected = marketTable.getSelectionModel().getSelectedItem();
+        
+        if (selected != null) {
+            TextInputDialog dialog = new TextInputDialog("10");
+            dialog.setTitle("Menge angeben");
+            dialog.setHeaderText("Bitte die gewünschte Menge eingeben:");
+            dialog.setContentText("Menge");
+            
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(name -> {
+                selected.setCount(selected.getCount() + Integer.parseInt(result.get()));
+                activePlayer.setCash(activePlayer.getCash() + (Integer.parseInt(result.get()) * selected.getValue()));
+                
+            });
+        }
+    }
+
+    @FXML
+    void sellBtnAction(ActionEvent event) {
+
+    }
+
+    @FXML
+    void dropBtnAction(ActionEvent event) {
+
     }
     
     private void initRegions() {

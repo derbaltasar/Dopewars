@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
 public class Drug {
     
     private StringProperty name = new SimpleStringProperty("default");
-    private double value = 0.0;     // aktueller Verkaufswert
+    private double value = 1.0;     // aktueller Verkaufswert
     private double min = 0.0;       // minimaler VK
     private double max = 0.0;       // maximaler VK
     private double reference = (min + max) / 2; // Richtpreis
