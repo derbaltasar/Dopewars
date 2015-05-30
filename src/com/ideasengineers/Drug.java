@@ -18,8 +18,7 @@ public class Drug {
     private static Random rnd = new Random();
     private double value = generateDrugPrice(reference);     // aktueller Verkaufswert
     private boolean available = true;
-    private Integer count = 0;
-    private double avgPrice = 0;
+    private Integer amount = 0;
 
     public Drug(StringProperty name, double min, double max) {
         this.name = name;
@@ -28,15 +27,15 @@ public class Drug {
         this.reference = (min + max) / 2;
         this.value = generateDrugPrice(this.reference);
     }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
     
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
     public StringProperty getName() {
         return name;
     }
@@ -78,7 +77,7 @@ public class Drug {
     }
     
     public void generateNewValue() {
-        this.value = generateDrugPrice(reference);
+        this.value = generateDrugPrice(this.reference);
         this.available = rnd.nextBoolean();
     }
     
@@ -113,15 +112,5 @@ public class Drug {
         }
         return (int) ((a - b) * Math.random() + b);
     }
-
-    public double getAvgPrice() {
-        return avgPrice;
-    }
-
-    public void setAvgPrice(double avgPrice) {
-        this.avgPrice = avgPrice;
-    }
-    
-    
     
 }

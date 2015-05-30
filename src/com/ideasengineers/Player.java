@@ -23,15 +23,25 @@ public class Player {
     private double agility = 0.05;
     private int maxGuns = 6;        // maximale Anzahl an Waffen
     private int maxDrugs = 100;     // maximale Anzahl an Drogen
+    private final int existingDrugs = 12;
     private Region activeRegion;
     private Gun[] gunPocket = new Gun[maxGuns];
-    
+    private Drug[] drugPocket = new Drug[existingDrugs];    
+    private int freeSpace = 100;
 
     public void Player(String name, double hp, double cash, double agility) {
         this.name = name;
         this.hp = hp;
         this.cash = cash;
         this.agility = agility;
+    }
+    
+    public int spaceVolume() {
+        int a = 0;
+        for(Drug drug : drugPocket) {
+            a += drug.getAmount();
+        }
+        return a;
     }
     
     public String getName() {

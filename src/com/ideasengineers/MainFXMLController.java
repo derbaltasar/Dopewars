@@ -65,8 +65,7 @@ public class MainFXMLController implements Initializable {
         priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getValue())));
         marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
-        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
-        pocketTable.setItems(activePlayer.getDrugPocket());
+        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getAmount())));
         
         regionField.setText(activePlayer.getActiveRegion().getName());
         bankField.setText(String.valueOf(activePlayer.getCash()));
@@ -75,8 +74,7 @@ public class MainFXMLController implements Initializable {
         healthField.setText(Double.toString(activePlayer.getHp()));
         agilityField.setText(Double.toString(activePlayer.getAgility()));
         dmgField.setText(Double.toString(activePlayer.getDmg()));
-        spaceField.setText(Integer.toString(activePlayer.getDrugPocket().size()));
-        
+        spaceField.setText(Integer.toString(activePlayer.getMaxDrugs()));
     }
     
     @Override
@@ -99,8 +97,7 @@ public class MainFXMLController implements Initializable {
         priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getValue())));
         marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
-        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
-        pocketTable.setItems(activePlayer.getDrugPocket());
+        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getAmount())));
         
         regionField.setText(activePlayer.getActiveRegion().getName());
         bankField.setText(String.valueOf(activePlayer.getCash()));
@@ -109,7 +106,6 @@ public class MainFXMLController implements Initializable {
         healthField.setText(Double.toString(activePlayer.getHp()));
         agilityField.setText(Double.toString(activePlayer.getAgility()));
         dmgField.setText(Double.toString(activePlayer.getDmg()));
-        spaceField.setText(Integer.toString(activePlayer.getDrugPocket().size()));
     }
     
     private void initRegions() {
@@ -163,16 +159,16 @@ public class MainFXMLController implements Initializable {
     
     private double randomDoubleMinMax(double a, double b) {
         if(a < b) {
-            return (b - a) * Math.random() + a;
+            return (b - a) * this.rnd.nextDouble() + a;
         }
-        return (a - b) * Math.random() + b;
+        return (a - b) * this.rnd.nextDouble() + b;
     }
     
     private int randomIntMinMax(int a, int b) {
         if(a < b) {
-            return (int) ((b - a) * Math.random() + a);
+            return (int) ((b - a) * this.rnd.nextDouble() + a);
         }
-        return (int) ((a - b) * Math.random() + b);
+        return (int) ((a - b) * this.rnd.nextDouble() + b);
     }
     
     private Region chooseRegion() {
