@@ -3,6 +3,7 @@
  */
 package com.ideasengineers;
 
+import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,8 +14,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -57,6 +60,10 @@ public class MainFXMLController implements Initializable {
     private ObservableList<Drug> newOffers = FXCollections.observableArrayList();
     private Random rnd = new Random();
     private Player activePlayer;
+    private FilteredList<Drug> drugsPocket;
+    private FilteredList<Drug> drugsMarket;
+    private SortedList<Drug> drugsPocketSort;
+    private SortedList<Drug> drugsMarketSort;
     
     @FXML
     private void jetBtnAction(ActionEvent event) {
@@ -69,10 +76,12 @@ public class MainFXMLController implements Initializable {
         
         nameMarketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getValue())));
-        marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
+        
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
-        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
-        pocketTable.setItems(activePlayer.getDrugPocket());
+        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getAmount())));
+        
+        rescanLists();
+        
         
         regionField.setText(activePlayer.getActiveRegion().getName());
         bankField.setText(String.valueOf(activePlayer.getCash()));
@@ -81,7 +90,7 @@ public class MainFXMLController implements Initializable {
         healthField.setText(Double.toString(activePlayer.getHp()));
         agilityField.setText(Double.toString(activePlayer.getAgility()));
         dmgField.setText(Double.toString(activePlayer.getDmg()));
-        spaceField.setText(Integer.toString(activePlayer.getDrugPocket().size()));
+        spaceField.setText(Integer.toString(100 - drugsPocket.size()));
         
     }
     
@@ -98,25 +107,57 @@ public class MainFXMLController implements Initializable {
         
         for(Drug b : activePlayer.getActiveRegion().getDrugs()) {
             b.generateNewValue();
-            System.out.println("GEN " + b.getName() + ": " + b.getValue());
         }
-        
+       
+
         nameMarketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getValue())));
-        marketTable.setItems(activePlayer.getActiveRegion().getDrugs());
-        namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
-        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getCount())));
         
-        FilteredList<Drug> drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(line -> { //only show if Region is NOT NULL
-                if (line != line) {
-                    return false;
-                }
-                return line.getCount() != 0;
-            });
-        pocketTable.setItems(drugsPocket);
+        namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
+        countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(String.valueOf(param.getValue().getAmount())));       
+        
+        rescanLists();
         
         regionField.setText(activePlayer.getActiveRegion().getName());
-        bankField.setText(String.valueOf(activePlayer.getCash()));
+        cashField.setText(Double.toString(activePlayer.getCash()));
+        debtField.setText(Double.toString(activePlayer.getDept()));
+        healthField.setText(Double.toString(activePlayer.getHp()));
+        agilityField.setText(Double.toString(activePlayer.getAgility()));
+        dmgField.setText(Double.toString(activePlayer.getDmg()));
+        spaceField.setText(Integer.toString(100 - drugsPocketSort.size()));
+        
+    }
+    
+    private void rescanLists() {
+        drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.getAmount() != 0);
+        drugsMarket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.isAvailable());
+        drugsPocketSort = drugsPocket.sorted();
+        drugsMarketSort = drugsMarket.sorted();
+        
+        activePlayer.getActiveRegion().getDrugs().addListener(new ListChangeListener<Drug>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Drug> c) {
+                drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.getAmount() != 0);
+                drugsMarket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.isAvailable());
+                drugsPocketSort = drugsPocket.sorted();
+                drugsMarketSort = drugsMarket.sorted();
+            }
+        });
+        drugsMarketSort.comparatorProperty().bind(marketTable.comparatorProperty());
+        nameMarketRow.setSortType(TableColumn.SortType.ASCENDING);
+        marketTable.setItems(drugsMarketSort);  
+        marketTable.getSortOrder().add(nameMarketRow);
+        
+        drugsPocketSort.comparatorProperty().bind(pocketTable.comparatorProperty());  
+        namePocketRow.setSortType(TableColumn.SortType.ASCENDING); 
+        pocketTable.setItems(drugsPocketSort);
+        pocketTable.getSortOrder().add(namePocketRow);
+        
+        Drug tmp = new Drug(new SimpleStringProperty("tmp"), 10.0, 20.0);
+        activePlayer.getActiveRegion().getDrugs().add(tmp);
+        activePlayer.getActiveRegion().getDrugs().remove(tmp);
+
+        
         
     }
     
@@ -127,22 +168,59 @@ public class MainFXMLController implements Initializable {
         
         if (selected != null) {
             TextInputDialog dialog = new TextInputDialog("10");
-            dialog.setTitle("Menge angeben");
-            dialog.setHeaderText("Bitte die gewünschte Menge eingeben:");
+            dialog.setTitle("Kaufen");
+            dialog.setHeaderText("Bitte die gewünschte Menge " + selected.getName() + " eingeben:");
             dialog.setContentText("Menge");
             
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(name -> {
-                selected.setCount(selected.getCount() + Integer.parseInt(result.get()));
-                activePlayer.setCash(activePlayer.getCash() + (Integer.parseInt(result.get()) * selected.getValue()));
+                
+                activePlayer.getActiveRegion().getDrugs().remove(selected);
+                selected.setAmount(selected.getAmount() + Integer.parseInt(result.get()));
+                activePlayer.setCash(activePlayer.getCash() - (Integer.parseInt(result.get()) * selected.getValue()));
+                activePlayer.getActiveRegion().getDrugs().add(selected);
+                marketTable.getSelectionModel().clearAndSelect(marketTable.getItems().indexOf(selected));
                 
             });
+            rescanLists();
         }
+        cashField.setText(Double.toString(activePlayer.getCash()));
+        debtField.setText(Double.toString(activePlayer.getDept()));
+        healthField.setText(Double.toString(activePlayer.getHp()));
+        agilityField.setText(Double.toString(activePlayer.getAgility()));
+        dmgField.setText(Double.toString(activePlayer.getDmg()));
+        spaceField.setText(Integer.toString(100 - drugsPocket.size()));
     }
 
     @FXML
     void sellBtnAction(ActionEvent event) {
 
+        Drug selected = pocketTable.getSelectionModel().getSelectedItem();
+        
+        if (selected != null) {
+            TextInputDialog dialog = new TextInputDialog("10");
+            dialog.setTitle("Verkaufen");
+            dialog.setHeaderText("Bitte die gewünschte Menge " + selected.getName() + " eingeben:");
+            dialog.setContentText("Menge");
+            
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(name -> {
+                
+                activePlayer.getActiveRegion().getDrugs().remove(selected);
+                selected.setAmount(selected.getAmount() - Integer.parseInt(result.get()));
+                activePlayer.setCash(activePlayer.getCash() + (Integer.parseInt(result.get()) * selected.getValue()));
+                activePlayer.getActiveRegion().getDrugs().add(selected);
+                pocketTable.getSelectionModel().clearAndSelect(pocketTable.getItems().indexOf(selected));
+                
+            });
+            rescanLists();
+        }
+        cashField.setText(Double.toString(activePlayer.getCash()));
+        debtField.setText(Double.toString(activePlayer.getDept()));
+        healthField.setText(Double.toString(activePlayer.getHp()));
+        agilityField.setText(Double.toString(activePlayer.getAgility()));
+        dmgField.setText(Double.toString(activePlayer.getDmg()));
+        spaceField.setText(Integer.toString(100 - drugsPocket.size()));
     }
 
     @FXML
@@ -153,7 +231,8 @@ public class MainFXMLController implements Initializable {
         healthField.setText(Double.toString(activePlayer.getHp()));
         agilityField.setText(Double.toString(activePlayer.getAgility()));
         dmgField.setText(Double.toString(activePlayer.getDmg()));
-        spaceField.setText(Integer.toString(activePlayer.getDrugPocket().size()));
+        spaceField.setText(Integer.toString(100 - drugsPocket.size()));
+        rescanLists();
     }
     
     private void initRegions() {
