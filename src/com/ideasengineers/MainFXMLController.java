@@ -65,6 +65,8 @@ public class MainFXMLController implements Initializable {
     private FilteredList<Drug> drugsMarket;
     private SortedList<Drug> drugsPocketSort;
     private SortedList<Drug> drugsMarketSort;
+    private String playerName = "Spieler";
+    private LocalDate date = LocalDate.now();
     
     @FXML
     private void jetBtnAction(ActionEvent event) {
