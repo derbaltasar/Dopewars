@@ -8,6 +8,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Player {
     private String name;
     private double hp;          // Lebenspunkte
     private double cash;        // Guthaben
+    private double balance;     // Guthaben
     private double dept;        // Schulden
     private double dmg;         // Schaden den man mit den momentan zur Verfügung stehenden Waffen anrichtet
     private double agility;     // Dmg Multiplikator
@@ -27,9 +30,10 @@ public class Player {
     private final int existingDrugs = 12;
     private Region activeRegion;
     private Gun[] gunPocket = new Gun[maxGuns];
-    private Drug[] drugPocket = new Drug[existingDrugs];
-    private int minusSpace;
+    private int minusSpace = 0;
     private int freeSpace = 100;
+    private double minAccountValue = 0;
+    private ObservableList<Drug> drugPocket;
 
     public Player() {
         this.name = "default";
@@ -41,6 +45,7 @@ public class Player {
         this.maxGuns = 6;
         this.maxDrugs = 100;
         this.freeSpace = maxDrugs;
+        this.balance = 0.0;
     }
     
     public Player(String name, double hp, double cash, double agility) {
@@ -53,6 +58,7 @@ public class Player {
         this.maxGuns = 6;
         this.maxDrugs = 100;
         this.freeSpace = maxDrugs;
+        this.balance = 0.0;
     }
     
     public Player(String name, double hp, double cash, double agility, int days) {
@@ -65,13 +71,16 @@ public class Player {
         this.maxGuns = 6;
         this.maxDrugs = 100;
         this.freeSpace = maxDrugs;
+        this.balance = 0.0;
     }
     
-    public void initFreeSpace() {
+    public void initFreeSpace(ObservableList<Drug> drugPocket) {
+        this.drugPocket = drugPocket;
         for(Drug drug : drugPocket) {
             this.minusSpace += drug.getAmount();
         }
-        this.freeSpace -= this.minusSpace;
+        this.freeSpace = 100 - this.minusSpace;
+        System.out.println(this.freeSpace);
     }
     
     public int spaceVolume() {
@@ -170,11 +179,11 @@ public class Player {
         this.freeSpace = freeSpace;
     }
 
-    public Drug[] getDrugPocket() {
+    public ObservableList<Drug> getDrugPocket() {
         return drugPocket;
     }
 
-    public void setDrugPocket(Drug[] drugPocket) {
+    public void setDrugPocket(ObservableList<Drug> drugPocket) {
         this.drugPocket = drugPocket;
     }
 
@@ -186,4 +195,14 @@ public class Player {
         this.playTime = playTime;
     }
 
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    
+    
 }

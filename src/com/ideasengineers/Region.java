@@ -14,7 +14,7 @@ public class Region {
     
     private String name = "default";
     private ObservableList<Drug> drugs = FXCollections.observableArrayList();
-    private Random rnd = new Random();
+    public static ArrayList<Region> regions = new ArrayList<>();
 
     public Region(String name) {
         this.name = name;
@@ -27,7 +27,7 @@ public class Region {
     public void setDrugs(ObservableList<Drug> drugs) {
         this.drugs = drugs;
     }
-    public static ArrayList<Region> regions = new ArrayList<>();
+    
 
     public String getName() {
         return name;

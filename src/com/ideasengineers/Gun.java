@@ -13,11 +13,36 @@ package com.ideasengineers;
  */
 public class Gun {
 
-    private String name = "default";
-    private int id = 0;
-    private double price = 0;
-    private double dmg = 0;
+    private String name;
+    private int id;
+    private double price;
+    private double dmg;
 
+    /**
+     * Konstruktor 1
+     * 
+     * @param name -> Name der Waffe
+     * @param id -> id der Waffe
+     * @param price -> Preis
+     * @param dmg -> Schaden den die Waffe verursacht
+     */
+    public Gun(String name, int id, double price, double dmg) {
+        this.name = name;
+        this.id = id;
+        this.price = price;
+        this.dmg = dmg;
+    }
+    
+    /**
+     * Konstruktor 2
+     */
+    public Gun() {
+        this.name = "default";
+        this.id = 0;
+        this.price = 0;
+        this.dmg = 0;
+    }
+    
     public String getName() {
         return name;
     }

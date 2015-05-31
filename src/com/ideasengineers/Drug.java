@@ -18,8 +18,17 @@ public class Drug {
     private static Random rnd = new Random();
     private double value = generateDrugPrice(reference);     // aktueller Verkaufswert
     private boolean available = true;
+    private int amount = 0;
 
     Drug() {
+    }
+    
+    public Drug(StringProperty name, double min, double max) {
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.reference = (min + max) / 2;
+        this.value = generateDrugPrice(this.reference);
     }
 
     public boolean isAvailable() {
@@ -28,17 +37,7 @@ public class Drug {
 
     public void setAvailable(boolean available) {
         this.available = available;
-    }
-    private Integer amount = 0;
-    private double avgPrice = 0;
-
-    public Drug(StringProperty name, double min, double max) {
-        this.name = name;
-        this.min = min;
-        this.max = max;
-        this.reference = (min + max) / 2;
-        this.value = generateDrugPrice(this.reference);
-    }
+    }    
 
     public Integer getAmount() {
         return amount;
@@ -113,7 +112,7 @@ public class Drug {
         } else if(decisionValue > 0.9 && decisionValue <= 0.95) {
             return (reference + (reference * (decisionValue + 1)));
         } else {
-            return (reference - (reference * decisionValue + 1));
+            return (reference + (reference * decisionValue + 1));
         }
         
     }
