@@ -15,23 +15,71 @@ import javafx.collections.ObservableList;
  */
 public class Player {
 
-    private String name = "default";
-    private double hp = 100;
-    private double cash = 5000;
-    private double dept = 5000;
-    private double dmg = 0;
-    private double agility = 0.05;
-    private int maxGuns = 6;        // maximale Anzahl an Waffen
-    private int maxDrugs = 100;     // maximale Anzahl an Drogen
+    private String name;
+    private double hp;          // Lebenspunkte
+    private double cash;        // Guthaben
+    private double dept;        // Schulden
+    private double dmg;         // Schaden den man mit den momentan zur Verfügung stehenden Waffen anrichtet
+    private double agility;     // Dmg Multiplikator
+    private int playTime;       // Spielzeit in Tagen
+    private int maxGuns;        // maximale Anzahl an Waffen
+    private int maxDrugs;       // maximale Anzahl an Drogen
+    private final int existingDrugs = 12;
     private Region activeRegion;
     private Gun[] gunPocket = new Gun[maxGuns];
-    
+    private Drug[] drugPocket = new Drug[existingDrugs];
+    private int minusSpace;
+    private int freeSpace = 100;
 
-    public void Player(String name, double hp, double cash, double agility) {
+    public Player() {
+        this.name = "default";
+        this.hp = 100;
+        this.cash = 5000;
+        this.agility = 0.05;
+        this.dept = cash;
+        this.playTime = 30;
+        this.maxGuns = 6;
+        this.maxDrugs = 100;
+        this.freeSpace = maxDrugs;
+    }
+    
+    public Player(String name, double hp, double cash, double agility) {
         this.name = name;
         this.hp = hp;
         this.cash = cash;
         this.agility = agility;
+        this.dept = cash;
+        this.playTime = 30;
+        this.maxGuns = 6;
+        this.maxDrugs = 100;
+        this.freeSpace = maxDrugs;
+    }
+    
+    public Player(String name, double hp, double cash, double agility, int days) {
+        this.name = name;
+        this.hp = hp;
+        this.cash = cash;
+        this.agility = agility;
+        this.dept = cash;
+        this.playTime = days;
+        this.maxGuns = 6;
+        this.maxDrugs = 100;
+        this.freeSpace = maxDrugs;
+    }
+    
+    public void initFreeSpace() {
+        for(Drug drug : drugPocket) {
+            this.minusSpace += drug.getAmount();
+        }
+        this.freeSpace -= this.minusSpace;
+    }
+    
+    public int spaceVolume() {
+        int a = 0;
+        for(Drug drug : drugPocket) {
+            a += drug.getAmount();
+        }
+        return a;
     }
     
     public String getName() {
@@ -113,8 +161,29 @@ public class Player {
     public void setDept(double dept) {
         this.dept = dept;
     }
-    
-    
-    
+
+    public int getFreeSpace() {
+        return freeSpace;
+    }
+
+    public void setFreeSpace(int freeSpace) {
+        this.freeSpace = freeSpace;
+    }
+
+    public Drug[] getDrugPocket() {
+        return drugPocket;
+    }
+
+    public void setDrugPocket(Drug[] drugPocket) {
+        this.drugPocket = drugPocket;
+    }
+
+    public int getPlayTime() {
+        return playTime;
+    }
+
+    public void setPlayTime(int playTime) {
+        this.playTime = playTime;
+    }
 
 }

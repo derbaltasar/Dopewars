@@ -7,12 +7,11 @@ import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,8 +21,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -40,25 +40,26 @@ import javafx.util.Callback;
  */
 public class MainFXMLController implements Initializable {
 
-    @FXML private TableColumn<Drug, String> priceRow;
-    @FXML private Label bankField;
-    @FXML private TableColumn<Drug, String> nameMarketRow;
-    @FXML private TableView<Drug> marketTable;
-    @FXML private Label regionField;
-    @FXML private Label debtField;
-    @FXML private Label cashField;
-    @FXML private TextArea logField;
-    @FXML private TableView<Drug> pocketTable;
-    @FXML private TableColumn<Drug, String> countRow;
-    @FXML private TableColumn<Drug, String> namePocketRow;
-    @FXML private TableColumn<Drug, String> avgPrice;
+    @FXML private TableView<Drug> marketTable;                  // Tabelle links für den Marktplatz
+    @FXML private TableView<Drug> pocketTable;                  // Tabelle rechts für das eigene Material
+    @FXML private TableColumn<Drug, String> countRow;           // Spalte in Tabelle rechts für die Anzahl der Droge
+    @FXML private TableColumn<Drug, String> priceRow;           // Spalte in Tabelle links für den Preis der Droge pro Gramm
+    @FXML private TableColumn<Drug, String> namePocketRow;      // Spalte in Tabelle rechts für den Namen der Droge
+    @FXML private TableColumn<Drug, String> nameMarketRow;      // Spalte in Tabelle links für den Namen der Droge
+    @FXML private TextArea logField;        // Anzeigetafel in der Mitte
+    @FXML private Label regionField;        // Standort
+    @FXML private Label debtField;          // Schulden
+    @FXML private Label cashField;          // Momentaner Spielgeldbetrag
     @FXML private Label spaceField;         // Noch freier Platz für Drogen
     @FXML private Label healthField;        // Verbleibende Lebenspunkte
     @FXML private Label dmgField;           // Gesamtschaden der Waffen
     @FXML private Label agilityField;       // Treffsicherheit
+    @FXML private Label dateField;          // Datumsausgabe
+    @FXML private Label bankField;          // Bankguthaben
+    
 
-    private ObservableList<Drug> newOffers = FXCollections.observableArrayList();
-    private Random rnd = new Random();
+    private ObservableList<Drug> newOffers;
+    private Random rnd;
     private Player activePlayer;
     private FilteredList<Drug> drugsPocket;
     private FilteredList<Drug> drugsMarket;
@@ -96,8 +97,23 @@ public class MainFXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        activePlayer = new Player();
-        Random rnd = new Random();
+        
+        TextInputDialog tid = new TextInputDialog("Spieler");
+        tid.setTitle("Dopewars");
+        tid.setHeaderText("Willkommen bei Dopewars!");
+        tid.setContentText("Bitte gib deinen Namen ein:");
+        Optional<String> response = tid.showAndWait();
+        response.ifPresent((name -> {
+            playerName = name;
+        }));
+        if(!response.isPresent()) {
+            System.exit(0);
+        }
+        
+        newOffers = FXCollections.observableArrayList();
+        date = LocalDate.now();
+        activePlayer = new Player(playerName, 100, 5000, 0.05);
+        rnd = new Random();
         
         initDrugs();
         initRegions();
@@ -286,20 +302,24 @@ public class MainFXMLController implements Initializable {
     
     private double randomDoubleMinMax(double a, double b) {
         if(a < b) {
-            return (b - a) * Math.random() + a;
+            return (b - a) * this.rnd.nextDouble() + a;
         }
-        return (a - b) * Math.random() + b;
+        return (a - b) * this.rnd.nextDouble() + b;
     }
     
     private int randomIntMinMax(int a, int b) {
         if(a < b) {
-            return (int) ((b - a) * Math.random() + a);
+            return (int) ((b - a) * this.rnd.nextDouble() + a);
         }
-        return (int) ((a - b) * Math.random() + b);
+        return (int) ((a - b) * this.rnd.nextDouble() + b);
     }
     
     private Region chooseRegion() {
         return Region.regions.get(rnd.nextInt(Region.regions.size()));
+    }
+
+    private LocalDate Date() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
