@@ -16,6 +16,10 @@ public class Region {
     private ObservableList<Drug> drugs = FXCollections.observableArrayList();
     private Random rnd = new Random();
 
+    public Region(String name) {
+        this.name = name;
+    }
+    
     public ObservableList<Drug> getDrugs() {
         return drugs;
     }

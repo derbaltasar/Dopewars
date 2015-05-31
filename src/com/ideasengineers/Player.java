@@ -18,6 +18,7 @@ public class Player {
     private String name = "default";
     private double hp = 100;
     private double cash = 5000;
+    private double dept = 5000;
     private double dmg = 0;
     private double agility = 0.05;
     private int maxGuns = 6;        // maximale Anzahl an Waffen
@@ -103,6 +104,14 @@ public class Player {
 
     public void setActiveRegion(Region activeRegion) {
         this.activeRegion = activeRegion;
+    }
+
+    public double getDept() {
+        return dept;
+    }
+
+    public void setDept(double dept) {
+        this.dept = dept;
     }
     
     
