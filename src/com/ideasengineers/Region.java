@@ -1,8 +1,6 @@
 package com.ideasengineers;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -26,8 +24,7 @@ public class Region {
 
     public void setDrugs(ObservableList<Drug> drugs) {
         this.drugs = drugs;
-    }
-    
+    }    
 
     public String getName() {
         return name;

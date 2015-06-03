@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="400.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ideasengineers.MainFXMLController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ideasengineers.MainFXMLController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -71,18 +71,18 @@
                   </VBox>
                </center>
                <left>
-                  <TableView fx:id="marketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="marketTable" prefHeight="180.0" prefWidth="350.0" BorderPane.alignment="CENTER">
                      <columns>
-                        <TableColumn fx:id="nameMarketRow" prefWidth="100.0" text="Name" />
+                        <TableColumn fx:id="nameMarketRow" prefWidth="250.0" text="Name" />
                         <TableColumn fx:id="priceRow" prefWidth="100.0" text="Price" />
                      </columns>
                   </TableView>
                </left>
                <right>
-                  <TableView fx:id="pocketTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="pocketTable" prefHeight="180.0" prefWidth="350.0" BorderPane.alignment="CENTER">
                      <columns>
-                        <TableColumn fx:id="namePocketRow" prefWidth="100.0" text="Name" />
-                        <TableColumn fx:id="countRow" prefWidth="100.0" text="count" />
+                        <TableColumn fx:id="namePocketRow" prefWidth="300.0" text="Name" />
+                        <TableColumn fx:id="countRow" prefWidth="50.0" text="Count" />
                      </columns>
                   </TableView>
                </right>

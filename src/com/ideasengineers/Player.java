@@ -4,12 +4,7 @@
 
 package com.ideasengineers;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 
 /**
  *
@@ -17,10 +12,12 @@ import javafx.collections.transformation.SortedList;
  */
 public class Player {
 
+    //+#+#+#+#+#+#+#+#+#+#+#+#+#+#+ Variablen +#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+    
     private String name;
     private double hp;          // Lebenspunkte
     private double cash;        // Guthaben
-    private double balance;     // Guthaben
+    private double balance;     // Bankguthaben
     private double dept;        // Schulden
     private double dmg;         // Schaden den man mit den momentan zur Verfügung stehenden Waffen anrichtet
     private double agility;     // Dmg Multiplikator
@@ -35,6 +32,12 @@ public class Player {
     private double minAccountValue = 0;
     private ObservableList<Drug> drugPocket;
 
+    //+#+#+#+#+#+#+#+#+#+#+#+#+#+#+ Konstruktoren +#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+    
+    /**
+     * Konstruktor 1
+     * ohne Parameter
+     */
     public Player() {
         this.name = "default";
         this.hp = 100;
@@ -48,6 +51,13 @@ public class Player {
         this.balance = 0.0;
     }
     
+    /**
+     * Konstruktor 2
+     * @param name -> Name des Spielers
+     * @param hp -> Lebenspunkte
+     * @param cash -> Bargeld
+     * @param agility -> Trefferwertung
+     */
     public Player(String name, double hp, double cash, double agility) {
         this.name = name;
         this.hp = hp;
@@ -61,6 +71,14 @@ public class Player {
         this.balance = 0.0;
     }
     
+    /**
+     * Konstruktor 3
+     * @param name -> Name des Spielers
+     * @param hp -> Lebenspunkte
+     * @param cash -> Bargeld
+     * @param agility -> Trefferwertung
+     * @param days -> Spielzeit in Tagen oder auch Runden
+     */
     public Player(String name, double hp, double cash, double agility, int days) {
         this.name = name;
         this.hp = hp;
@@ -73,6 +91,8 @@ public class Player {
         this.freeSpace = maxDrugs;
         this.balance = 0.0;
     }
+    
+    //+#+#+#+#+#+#+#+#+#+#+#+#+#+#+ Methoden +#+#+#+#+#+#+#+#+#+#+#+#+#+#+
     
     public void initFreeSpace(ObservableList<Drug> drugPocket) {
         this.drugPocket = drugPocket;
@@ -90,6 +110,8 @@ public class Player {
         }
         return a;
     }
+    
+    //+#+#+#+#+#+#+#+#+#+#+#+#+#+#+ Getter und Setter +#+#+#+#+#+#+#+#+#+#+#+#+#+#+
     
     public String getName() {
         return name;
@@ -201,8 +223,6 @@ public class Player {
 
     public void setBalance(double balance) {
         this.balance = balance;
-    }
-
-    
+    }    
     
 }

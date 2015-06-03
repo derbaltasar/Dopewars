@@ -79,50 +79,50 @@ public class MainFXMLController implements Initializable {
      * Deklarierungen
      */
     private ObservableList<Drug> newOffers;     // DrugList die sich bei Änderung aktuialisiert
-    private Random rnd;
-    private Player activePlayer;
-    private FilteredList<Drug> drugsPocket;
-    private FilteredList<Drug> drugsMarket;
-    private SortedList<Drug> drugsPocketSort;
-    private SortedList<Drug> drugsMarketSort;
-    private LocalDate date;
+    private Random rnd;                         // Objekt mir Methoden um Zufallszahlen zu erstellen
+    private Player activePlayer;                // wie der Name sagt: der aktive Spieler
+    private FilteredList<Drug> drugsPocket;     // gefilterte Liste für die Drogentasche
+    private FilteredList<Drug> drugsMarket;     // gefilterte Liste für den Drogenmarkt
+    private SortedList<Drug> drugsPocketSort;   // sortierte Liste für die Drogentasche
+    private SortedList<Drug> drugsMarketSort;   // sortierte Liste für den Drogenmarkt
+    private LocalDate date;                     // Datumsobjekt
+    private double optionHp;
+    private double optionCash;
+    private double optionAgility;
+    private String temp;
     
     /**
      * Initialisierungen
      */
-    private String playerName = "Spieler";                  // Default-Spieler Name     
-    private final DecimalFormat f = new DecimalFormat("#0.00");   // "2 Stellen hinterm Komma" - Format
-    private String[] officerNames;
+    private String playerName;
+    private final DecimalFormat f = new DecimalFormat("#0.00");         // "2 Stellen hinterm Komma" - Format, für die Ausgabe von Preisen
+    private final String[] officerNames = {
+        "Officer", "FBI Agent", "NSA Spy", "Soldier", "007"
+    };
 
     @FXML
-    private void jetBtnAction(ActionEvent event) {       
-
+    private void jetBtnAction(ActionEvent event) {
         chooseRegion();
-
+        checkPlayTime(activePlayer.getPlayTime(), activePlayer.getPlayTime());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        String[] officerNames = {"Officer", "FBI Agent", "NSA Spy", "Soldier", "007"};
+        
+        this.optionHp = 100;
+        this.optionCash = 5000;
+        this.optionAgility = 0.05;
         
         this.date = LocalDate.now();
         
-        TextInputDialog tid = new TextInputDialog("Spieler");
-        tid.setTitle("Dopewars");
-        tid.setHeaderText("Willkommen bei Dopewars!");
-        tid.setContentText("Bitte gib deinen Namen ein:");
-        Optional<String> response = tid.showAndWait();
-        response.ifPresent((name -> {
-            this.playerName = name;
-        }));
-        if(!response.isPresent()) {
-            System.exit(0);
-        }
+        createTextInputDialog4Name("Spieler", "Dopewars", "Willkommen bei Dopewars\nBitte mit OK bestätigen!", "Bitte gib deinen Namen ein:");
+        createTextInputDialog4Hp(String.valueOf(this.optionHp), "Dopewars", "Optionen\nLebenspunkte\nBitte mit OK bestätigen!", "Mit wievielen Lebenspunkten möchtest du starten?");
+        createTextInputDialog4Cash(String.valueOf(this.optionCash), "Dopewars", "Optionen\nBargeld\nBitte mit OK bestätigen!", "Mit wieviel Bargeld möchtest du starten?");
+        createTextInputDialog4Agility(String.valueOf(this.optionAgility), "Dopewars", "Optionen\nTreffsicherheit\nBitte mit OK bestätigen!", "Mit wieviel Treffsicherheit möchtest du starten?");
 
         newOffers = FXCollections.observableArrayList();
         date = LocalDate.now();
-        activePlayer = new Player(playerName, 100, 5000, 0.05);
+        activePlayer = new Player(this.playerName, this.optionHp, this.optionCash, this.optionAgility);
         rnd = new Random();
 
         initDrugs();
@@ -135,7 +135,6 @@ public class MainFXMLController implements Initializable {
             b.generateNewValue();
         }
 
-
         nameMarketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(f.format(param.getValue().getValue())));
 
@@ -143,7 +142,6 @@ public class MainFXMLController implements Initializable {
         countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(f.format(param.getValue().getAmount())));
 
         rescanLists();
-
         updateFields();
 
     }
@@ -154,7 +152,7 @@ public class MainFXMLController implements Initializable {
      * generiert die beiden Listen (Markt und Tasche) neu
      */
     private void rescanLists() {
-        drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.getAmount() != 0);
+        drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.getAmount() != 0);            // 
         drugsMarket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.isAvailable());
         drugsPocketSort = drugsPocket.sorted();
         drugsMarketSort = drugsMarket.sorted();
@@ -364,4 +362,68 @@ public class MainFXMLController implements Initializable {
         updateFields();
 
     }
+    
+    private boolean checkPlayTime(int days, int playTime) {
+        return days <= playTime;
+    }
+    
+    private void createTextInputDialog4Name(String tidValue, String tidTitle, String tidHeader, String tidContent) {
+        TextInputDialog tid = new TextInputDialog(tidValue);
+        tid.setTitle(tidTitle);
+        tid.setHeaderText(tidHeader);
+        tid.setContentText(tidContent);
+        Optional<String> response = tid.showAndWait();
+        response.ifPresent((name -> {
+            this.playerName = name.trim();
+        }));
+        if(!response.isPresent()) {
+            System.exit(0);
+        }
+    }
+    
+    private void createTextInputDialog4Hp(String tidValue, String tidTitle, String tidHeader, String tidContent) {        
+        TextInputDialog tid = new TextInputDialog(tidValue);
+        tid.setTitle(tidTitle);
+        tid.setHeaderText(tidHeader);
+        tid.setContentText(tidContent);
+        Optional<String> response = tid.showAndWait();
+        response.ifPresent((hp -> {
+            this.temp = hp;
+            this.optionHp = Double.valueOf(this.temp);
+        }));
+        if(!response.isPresent()) {
+            System.exit(0);
+        }
+    }
+    
+    private void createTextInputDialog4Agility(String tidValue, String tidTitle, String tidHeader, String tidContent) {
+        TextInputDialog tid = new TextInputDialog(tidValue);
+        tid.setTitle(tidTitle);
+        tid.setHeaderText(tidHeader);
+        tid.setContentText(tidContent);
+        Optional<String> response = tid.showAndWait();
+        response.ifPresent((agility -> {
+            this.temp = agility;
+            this.optionAgility = Double.valueOf(this.temp);
+        }));
+        if(!response.isPresent()) {
+            System.exit(0);
+        }
+    }
+    
+    private void createTextInputDialog4Cash(String tidValue, String tidTitle, String tidHeader, String tidContent) {
+        TextInputDialog tid = new TextInputDialog(tidValue);
+        tid.setTitle(tidTitle);
+        tid.setHeaderText(tidHeader);
+        tid.setContentText(tidContent);
+        Optional<String> response = tid.showAndWait();
+        response.ifPresent((cash -> {
+            this.temp = cash;
+            this.optionCash = Double.valueOf(this.temp);
+        }));
+        if(!response.isPresent()) {
+            System.exit(0);
+        }
+    }
+    
 }
