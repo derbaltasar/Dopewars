@@ -3,9 +3,8 @@
  */
 package com.ideasengineers;
 
-import java.io.IOException;
+import com.sun.javafx.scene.control.skin.CustomColorDialog;
 import java.net.URL;
-import java.util.ArrayList;
 import java.text.*;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -18,12 +17,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -31,10 +26,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 
 /**
  *
@@ -90,7 +85,7 @@ public class MainFXMLController implements Initializable {
     private double optionCash;
     private double optionAgility;
     private String temp;
-    
+
     /**
      * Initialisierungen
      */
@@ -102,23 +97,36 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void jetBtnAction(ActionEvent event) {
-        chooseRegion();
-        checkPlayTime(activePlayer.getPlayTime(), activePlayer.getPlayTime());
+        if(!(checkPlayTime(activePlayer.getDayCounter(), activePlayer.getPlayTime()))) {
+            chooseRegion();
+        } else {
+            
+        }
     }
 
+    /**
+     * Initialisierung beim Spielstart
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        // Standardwerte für Lebenspunkte, Cash und Agility
         this.optionHp = 100;
         this.optionCash = 5000;
         this.optionAgility = 0.05;
-        
-        this.date = LocalDate.now();
-        
-        createTextInputDialog4Name("Spieler", "Dopewars", "Willkommen bei Dopewars\nBitte mit OK bestätigen!", "Bitte gib deinen Namen ein:");
-        createTextInputDialog4Hp(String.valueOf(this.optionHp), "Dopewars", "Optionen\nLebenspunkte\nBitte mit OK bestätigen!", "Mit wievielen Lebenspunkten möchtest du starten?");
-        createTextInputDialog4Cash(String.valueOf(this.optionCash), "Dopewars", "Optionen\nBargeld\nBitte mit OK bestätigen!", "Mit wieviel Bargeld möchtest du starten?");
-        createTextInputDialog4Agility(String.valueOf(this.optionAgility), "Dopewars", "Optionen\nTreffsicherheit\nBitte mit OK bestätigen!", "Mit wieviel Treffsicherheit möchtest du starten?");
+
+        // heutiges Datum als Standardwert
+        //this.date = LocalDate.now();
+
+        // Erste frage nach Standardwerteinstellungen... Benutzerdefinierter Schwierigkeitsgrad
+        if(createTextInputDialog4Options("Options", "Dopewars")) {
+            createTextInputDialog("Spieler", "Dopewars", "Willkommen bei Dopewars\nBitte mit OK bestätigen!", "Bitte gib deinen Namen ein:", 0);
+            createTextInputDialog(String.valueOf(this.optionHp), "Dopewars", "Optionen\nLebenspunkte\nBitte mit OK bestätigen!", "Mit wievielen Lebenspunkten möchtest du starten?", 1);
+            createTextInputDialog(String.valueOf(this.optionCash), "Dopewars", "Optionen\nBargeld\nBitte mit OK bestätigen!", "Mit wieviel Bargeld möchtest du starten?", 2);
+            createTextInputDialog(String.valueOf(this.optionAgility), "Dopewars", "Optionen\nTreffsicherheit\nBitte mit OK bestätigen!", "Mit wieviel Treffsicherheit möchtest du starten?", 3);
+        }
 
         newOffers = FXCollections.observableArrayList();
         date = LocalDate.now();
@@ -148,7 +156,7 @@ public class MainFXMLController implements Initializable {
 
     /**
      * method rescanLists()
-     * 
+     *
      * generiert die beiden Listen (Markt und Tasche) neu
      */
     private void rescanLists() {
@@ -174,6 +182,7 @@ public class MainFXMLController implements Initializable {
         pocketTable.getSortOrder().add(namePocketRow);
         pocketTable.setPlaceholder(new Label(""));
 
+        // neue Droge anlegen und gleich wieder löschen um Liste zu aktualisieren
         Drug tmp = new Drug(new SimpleStringProperty("tmp"), 10.0, 20.0);
         activePlayer.getActiveRegion().getDrugs().add(tmp);
         activePlayer.getActiveRegion().getDrugs().remove(tmp);
@@ -337,7 +346,7 @@ public class MainFXMLController implements Initializable {
     private void chooseRegion() {
         String[] regions = new String[Region.regions.size()];
         int i = 0;
-        for (Region r : Region.regions) {
+        for(Region r : Region.regions) {
             regions[i] = r.getName();
             i++;
         }
@@ -347,8 +356,8 @@ public class MainFXMLController implements Initializable {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(name -> {
-            for (Region r : Region.regions) {
-                if (r.getName() == name) {
+            for(Region r : Region.regions) {
+                if(r.getName() == name) {
                     activePlayer.setActiveRegion(r);
                     break;
                 }
@@ -356,74 +365,85 @@ public class MainFXMLController implements Initializable {
             for(Drug b : activePlayer.getActiveRegion().getDrugs()) {
                 b.generateNewValue();
             }
-            
+
         });
         rescanLists();
         updateFields();
 
     }
-    
+
+    /**
+     * 
+     * @param days -> hier bitte den dayCounter übergeben, bzw. die bisherig Anzahl der gespielten Tage
+     * @param playTime -> hier bitte die maximale Spieldauer angeben
+     * @return -> true bedeutet dass die maximale Spielzeit erreicht ist
+     */
     private boolean checkPlayTime(int days, int playTime) {
         return days <= playTime;
     }
-    
-    private void createTextInputDialog4Name(String tidValue, String tidTitle, String tidHeader, String tidContent) {
+
+    private void createTextInputDialog(String tidValue, String tidTitle, String tidHeader, String tidContent, int optionCase) {
         TextInputDialog tid = new TextInputDialog(tidValue);
         tid.setTitle(tidTitle);
         tid.setHeaderText(tidHeader);
         tid.setContentText(tidContent);
         Optional<String> response = tid.showAndWait();
-        response.ifPresent((name -> {
-            this.playerName = name.trim();
-        }));
+        switch(optionCase) {
+            case 0:
+                response.ifPresent((name -> {
+                    this.playerName = name.trim();
+                }));
+                break;
+            case 1:
+                response.ifPresent((hp -> {
+                    this.temp = hp;
+                    this.optionHp = Double.valueOf(this.temp);
+                }));
+                break;
+            case 2:
+                response.ifPresent((agility -> {
+                    this.temp = agility;
+                    this.optionAgility = Double.valueOf(this.temp);
+                }));
+                break;
+            case 3:
+                response.ifPresent((cash -> {
+                    this.temp = cash;
+                    this.optionCash = Double.valueOf(this.temp);
+                }));
+                break;
+            default:
+                System.exit(0);
+        }
         if(!response.isPresent()) {
             System.exit(0);
         }
     }
-    
-    private void createTextInputDialog4Hp(String tidValue, String tidTitle, String tidHeader, String tidContent) {        
-        TextInputDialog tid = new TextInputDialog(tidValue);
-        tid.setTitle(tidTitle);
-        tid.setHeaderText(tidHeader);
-        tid.setContentText(tidContent);
-        Optional<String> response = tid.showAndWait();
-        response.ifPresent((hp -> {
-            this.temp = hp;
-            this.optionHp = Double.valueOf(this.temp);
-        }));
-        if(!response.isPresent()) {
+
+    private boolean createTextInputDialog4Options(String tidTitle, String tidHeader) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(tidTitle);
+        alert.setHeaderText(tidHeader);
+        alert.setContentText("Möchtest du mit den Standartwerten starten oder diese beliebig anpassen?");
+
+        ButtonType buttonTypeOne = new ButtonType("Standartwerte");
+        ButtonType buttonTypeTwo = new ButtonType("Anpassen");
+        ButtonType buttonTypeCancel = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
+
+        Optional<ButtonType> response = alert.showAndWait();
+
+        if(response.get() == buttonTypeOne) {
+            return false;
+        } else if(response.get() == buttonTypeTwo) {
+            return true;
+        } else if(response.get() == buttonTypeCancel) {
             System.exit(0);
         }
+        return false;
     }
-    
-    private void createTextInputDialog4Agility(String tidValue, String tidTitle, String tidHeader, String tidContent) {
-        TextInputDialog tid = new TextInputDialog(tidValue);
-        tid.setTitle(tidTitle);
-        tid.setHeaderText(tidHeader);
-        tid.setContentText(tidContent);
-        Optional<String> response = tid.showAndWait();
-        response.ifPresent((agility -> {
-            this.temp = agility;
-            this.optionAgility = Double.valueOf(this.temp);
-        }));
-        if(!response.isPresent()) {
-            System.exit(0);
-        }
-    }
-    
-    private void createTextInputDialog4Cash(String tidValue, String tidTitle, String tidHeader, String tidContent) {
-        TextInputDialog tid = new TextInputDialog(tidValue);
-        tid.setTitle(tidTitle);
-        tid.setHeaderText(tidHeader);
-        tid.setContentText(tidContent);
-        Optional<String> response = tid.showAndWait();
-        response.ifPresent((cash -> {
-            this.temp = cash;
-            this.optionCash = Double.valueOf(this.temp);
-        }));
-        if(!response.isPresent()) {
-            System.exit(0);
-        }
+
+    private void showEndGameDialog() {
+        
     }
     
 }

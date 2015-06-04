@@ -21,7 +21,8 @@ public class Player {
     private double dept;        // Schulden
     private double dmg;         // Schaden den man mit den momentan zur Verfügung stehenden Waffen anrichtet
     private double agility;     // Dmg Multiplikator
-    private int playTime;       // Spielzeit in Tagen
+    private int playTime;       // maximale Spielzeit in Tagen
+    private int dayCounter;     // Tageszähler
     private int maxGuns;        // maximale Anzahl an Waffen
     private int maxDrugs;       // maximale Anzahl an Drogen
     private final int existingDrugs = 12;
@@ -44,11 +45,12 @@ public class Player {
         this.cash = 5000;
         this.agility = 0.05;
         this.dept = cash;
-        this.playTime = 30;
+        this.playTime = 60;
         this.maxGuns = 6;
         this.maxDrugs = 100;
         this.freeSpace = maxDrugs;
         this.balance = 0.0;
+        this.dayCounter = 1;
     }
     
     /**
@@ -64,11 +66,12 @@ public class Player {
         this.cash = cash;
         this.agility = agility;
         this.dept = cash;
-        this.playTime = 30;
+        this.playTime = 60;
         this.maxGuns = 6;
         this.maxDrugs = 100;
         this.freeSpace = maxDrugs;
         this.balance = 0.0;
+        this.dayCounter = 1;
     }
     
     /**
@@ -90,6 +93,7 @@ public class Player {
         this.maxDrugs = 100;
         this.freeSpace = maxDrugs;
         this.balance = 0.0;
+        this.dayCounter = 1;
     }
     
     //+#+#+#+#+#+#+#+#+#+#+#+#+#+#+ Methoden +#+#+#+#+#+#+#+#+#+#+#+#+#+#+
@@ -223,6 +227,16 @@ public class Player {
 
     public void setBalance(double balance) {
         this.balance = balance;
-    }    
+    }
+
+    public int getDayCounter() {
+        return dayCounter;
+    }
+
+    public void setDayCounter(int dayCounter) {
+        this.dayCounter = dayCounter;
+    }
+    
+    
     
 }
