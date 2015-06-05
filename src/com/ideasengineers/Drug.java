@@ -19,7 +19,7 @@ public class Drug {
     private double reference;                   // Richtpreis    
     private double value;                       // aktueller Verkaufswert
     private boolean available;
-    private int amount;
+    private Integer amount;
     private String[] logs;
 
     //+#+#+#+#+#+#+#+#+#+#+#+#+#+#+ Konstruktoren +#+#+#+#+#+#+#+#+#+#+#+#+#+#+
@@ -59,8 +59,7 @@ public class Drug {
     public void generateNewValue() {
         this.value = generateDrugPrice(this.reference);
         this.available = rnd.nextBoolean();
-        checkDrugPriceToMessage();
-        
+        //checkDrugPriceToMessage();
     }
     
     /**
@@ -157,6 +156,6 @@ public class Drug {
     public void setReference(double reference) {
         this.reference = reference;
     }
-    
+
     
 }

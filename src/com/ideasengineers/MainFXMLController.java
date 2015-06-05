@@ -3,10 +3,8 @@
  */
 package com.ideasengineers;
 
-import com.sun.javafx.scene.control.skin.CustomColorDialog;
 import java.net.URL;
 import java.text.*;
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -19,6 +17,10 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -30,6 +32,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.stage.Stage;
 
 /**
  *
@@ -80,10 +83,10 @@ public class MainFXMLController implements Initializable {
     private FilteredList<Drug> drugsMarket;     // gefilterte Liste für den Drogenmarkt
     private SortedList<Drug> drugsPocketSort;   // sortierte Liste für die Drogentasche
     private SortedList<Drug> drugsMarketSort;   // sortierte Liste für den Drogenmarkt
-    private LocalDate date;                     // Datumsobjekt
     private double optionHp;
     private double optionCash;
     private double optionAgility;
+    private int optionPlayTime;
     private String temp;
 
     /**
@@ -97,10 +100,12 @@ public class MainFXMLController implements Initializable {
 
     @FXML
     private void jetBtnAction(ActionEvent event) {
-        if(!(checkPlayTime(activePlayer.getDayCounter(), activePlayer.getPlayTime()))) {
+        if(checkPlayTime(activePlayer.getDayCounter(), activePlayer.getPlayTime())) {
+            activePlayer.initDayxCashArray();       // Array für Endchart, index ist der Tag, der Wert ist der Cashstand
+            activePlayer.setDayCounter(activePlayer.getDayCounter() + 1);       // erhöht den Daycounter um 1
             chooseRegion();
         } else {
-            
+            showEndGameDialog(activePlayer.getDayxCashArray());
         }
     }
 
@@ -112,42 +117,58 @@ public class MainFXMLController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         // Standardwerte für Lebenspunkte, Cash und Agility
         this.optionHp = 100;
         this.optionCash = 5000;
         this.optionAgility = 0.05;
+        this.optionPlayTime = 60;
 
-        // heutiges Datum als Standardwert
-        //this.date = LocalDate.now();
-
-        // Erste frage nach Standardwerteinstellungen... Benutzerdefinierter Schwierigkeitsgrad
-        if(createTextInputDialog4Options("Options", "Dopewars")) {
-            createTextInputDialog("Spieler", "Dopewars", "Willkommen bei Dopewars\nBitte mit OK bestätigen!", "Bitte gib deinen Namen ein:", 0);
-            createTextInputDialog(String.valueOf(this.optionHp), "Dopewars", "Optionen\nLebenspunkte\nBitte mit OK bestätigen!", "Mit wievielen Lebenspunkten möchtest du starten?", 1);
-            createTextInputDialog(String.valueOf(this.optionCash), "Dopewars", "Optionen\nBargeld\nBitte mit OK bestätigen!", "Mit wieviel Bargeld möchtest du starten?", 2);
-            createTextInputDialog(String.valueOf(this.optionAgility), "Dopewars", "Optionen\nTreffsicherheit\nBitte mit OK bestätigen!", "Mit wieviel Treffsicherheit möchtest du starten?", 3);
-        }
-
-        newOffers = FXCollections.observableArrayList();
-        date = LocalDate.now();
-        activePlayer = new Player(this.playerName, this.optionHp, this.optionCash, this.optionAgility);
         rnd = new Random();
 
+        // Namen angeben
+        createTextInputDialog("Spieler", "Dopewars", "Willkommen bei Dopewars\nBitte mit OK bestätigen!", "Bitte gib deinen Namen ein:", 0);
+        // Erste frage nach Standardwerteinstellungen... Benutzerdefinierter Schwierigkeitsgrad
+        if(createTextInputDialog4Options("Options", "Dopewars")) {
+            createTextInputDialog(String.valueOf(this.optionHp), "Dopewars", "Optionen\nLebenspunkte\nBitte mit OK bestätigen!", "Mit wievielen Lebenspunkten möchtest du starten?", 1);
+            createTextInputDialog(String.valueOf(this.optionAgility), "Dopewars", "Optionen\nBargeld\nBitte mit OK bestätigen!", "Mit wieviel Treffsicherheit möchtest du starten?", 2);
+            createTextInputDialog(String.valueOf(this.optionCash), "Dopewars", "Optionen\nTreffsicherheit\nBitte mit OK bestätigen!", "Mit wieviel Bargeld möchtest du starten?", 3);
+            createTextInputDialog(String.valueOf(this.optionPlayTime), "Dopewars", "Optionen\nSpielzeit\nBitte mit OK bestätigen!", "Wieviele Tage möchtest du spielen? (max. 300)", 4);
+        }
+
+        // Name der Liste aller Drugs während der Erstellungsphase
+        newOffers = FXCollections.observableArrayList();
+
+        // Erstelle Spieler
+        activePlayer = new Player(this.playerName, this.optionHp, this.optionCash, this.optionAgility, this.optionPlayTime);
+
+        // speichern der Cashwerte im Casharray dayxCashArray
+        Double[] tmpCashDay = new Double[activePlayer.getPlayTime()];
+        tmpCashDay[activePlayer.getDayCounter()] = activePlayer.getCash();
+
+        // Initialisierung der Drogen und der Regionen
         initDrugs();
         initRegions();
 
+        // Initialisierung der Startregion, in dem Fall ein Randomwert
         activePlayer.setActiveRegion(Region.regions.get(rnd.nextInt(Region.regions.size() - 1)));
         System.out.println("Set Region to " + activePlayer.getActiveRegion().getName());
 
+        // die Drogen aus der aktiven Region holen und neue Werte generieren
         for(Drug b : activePlayer.getActiveRegion().getDrugs()) {
             b.generateNewValue();
         }
 
+        // Initialisierung der linken Marktspalte und deren verfügbaren Drogen (linke Spalte -> Drogenname, rechte Spalte -> Drogenpreis)
         nameMarketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         priceRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(f.format(param.getValue().getValue())));
 
+        // Initialisierung der rechten Taschenspalte und derren Inhalt (linke Spalte -> Drogenname, rechte Spalte -> Drogenanzahl)
         namePocketRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> param.getValue().getName());
         countRow.setCellValueFactory((CellDataFeatures<Drug, String> param) -> new SimpleStringProperty(f.format(param.getValue().getAmount())));
+
+        // dayCounter auf 1 setzen
+        activePlayer.setDayCounter(activePlayer.getDayCounter() + 1);
 
         rescanLists();
         updateFields();
@@ -160,7 +181,7 @@ public class MainFXMLController implements Initializable {
      * generiert die beiden Listen (Markt und Tasche) neu
      */
     private void rescanLists() {
-        drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.getAmount() != 0);            // 
+        drugsPocket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.getAmount() != 0);
         drugsMarket = activePlayer.getActiveRegion().getDrugs().filtered(drug -> drug.isAvailable());
         drugsPocketSort = drugsPocket.sorted();
         drugsMarketSort = drugsMarket.sorted();
@@ -192,25 +213,39 @@ public class MainFXMLController implements Initializable {
     @FXML
     void buyBtnAction(ActionEvent event) {
 
+        // die ausgewählte Droge aus der Marketliste ermitteln
         Drug selected = marketTable.getSelectionModel().getSelectedItem();
 
-        if(selected != null) {
-            TextInputDialog dialog = new TextInputDialog("10");
-            int maxSpace = activePlayer.getFreeSpace();
+        if(selected != null) {      // wenn Auswahl gemacht, also != null
+
+            TextInputDialog dialog = new TextInputDialog("10");     // Standardeinkaufswert
+
+            // wichtig! Ermitteln der noch freien Plätze in der Drogentasche
+            activePlayer.initFreeSpace(activePlayer.getDrugPocket());
+
+            int maxSpace = activePlayer.getFreeSpace();             // Ermitteln der noch freien Plätze in der Drogentasche
+
+            // Ermitteln der maximalen Einheiten die vom verfügbaren Geld gekauft werden können
             int maxCash = (int) (activePlayer.getCash() / selected.getValue());
+
+            // Variable für die Anzeige, was maximale von der ausgewählten Droge gekauft werden kann
             int max;
-            if(maxSpace < maxCash) {
-                max = maxSpace;
+
+            if(maxSpace < maxCash) {    // ist verfügbarer Platz in der Tasche kleiner als die Anzahl der zu kaufenden Drogen vom Geld
+                max = maxSpace;         // -> max ist die kleinere Begrenzung
             } else {
-                max = maxCash;
+                max = maxCash;          // -> max ist die kleinere Begrenzung
             }
             dialog.setTitle("Kaufen");
             dialog.setHeaderText("Bitte die gewünschte Menge " + selected.getName() + " eingeben [MAX=" + max + "]:");
             dialog.setContentText("Menge");
 
+            // Auf entscheidung des Players warten
             Optional<String> result = dialog.showAndWait();
+
+            
             result.ifPresent(name -> {
-                if(Integer.parseInt(name) < max) {
+                if(Integer.parseInt(name) <= max) {      // wenn die eingegebene Menge zu kaufender Drogen max nicht überschreitet, darf gekauft werden
                     activePlayer.getActiveRegion().getDrugs().remove(selected);
                     selected.setAmount(selected.getAmount() + Integer.parseInt(result.get()));
                     activePlayer.setCash(activePlayer.getCash() - (Integer.parseInt(result.get()) * selected.getValue()));
@@ -220,7 +255,6 @@ public class MainFXMLController implements Initializable {
                     ed.setTitle("Fehler");
                     ed.setHeaderText("Mögliche Anzahl zu kaufender Drogen überschritten.");
                     ed.showAndWait();
-
                 }
 
                 marketTable.getSelectionModel().clearAndSelect(marketTable.getItems().indexOf(selected));
@@ -245,7 +279,7 @@ public class MainFXMLController implements Initializable {
 
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(name -> {
-
+                
                 activePlayer.getActiveRegion().getDrugs().remove(selected);
                 selected.setAmount(selected.getAmount() - Integer.parseInt(result.get()));
                 activePlayer.setCash(activePlayer.getCash() + (Integer.parseInt(result.get()) * selected.getValue()));
@@ -292,6 +326,7 @@ public class MainFXMLController implements Initializable {
         activePlayer.initFreeSpace(activePlayer.getActiveRegion().getDrugs());
         spaceField.setText(Integer.toString(activePlayer.getFreeSpace()));
         bankField.setText(f.format(activePlayer.getBalance()));
+        dateField.setText(Integer.toString(activePlayer.getDayCounter()));
     }
 
     private void initRegions() {
@@ -344,27 +379,27 @@ public class MainFXMLController implements Initializable {
     }
 
     private void chooseRegion() {
-        String[] regions = new String[Region.regions.size()];
+        String[] regions = new String[Region.regions.size()];               // array der Länge der Regionanzahl deklarieren
         int i = 0;
         for(Region r : Region.regions) {
-            regions[i] = r.getName();
+            regions[i] = r.getName();                                       // und dort die Namen der Regionen abspeichern
             i++;
         }
-        ChoiceDialog dialog = new ChoiceDialog(regions[0], regions);
+        ChoiceDialog dialog = new ChoiceDialog(regions[0], regions);        // erstellen des Auswahlfeldes der Regionen
         dialog.setTitle("Jet!");
         dialog.setHeaderText("Bitte Ziel auswählen:");
 
-        Optional<String> result = dialog.showAndWait();
+        Optional<String> result = dialog.showAndWait();                     // Dialog anzeigen und auf User warten
         result.ifPresent(name -> {
             for(Region r : Region.regions) {
-                if(r.getName() == name) {
-                    activePlayer.setActiveRegion(r);
+                if(r.getName().equals(name)) {                                   // wenn einer der Regionen mit der Auswahl übereinstimmt
+                    activePlayer.setActiveRegion(r);                        // weiße die Region dem Player als momentanen Standort zu
                     break;
                 }
             }
-            for(Drug b : activePlayer.getActiveRegion().getDrugs()) {
+            activePlayer.getActiveRegion().getDrugs().stream().forEach((b) -> {
                 b.generateNewValue();
-            }
+            });
 
         });
         rescanLists();
@@ -373,7 +408,7 @@ public class MainFXMLController implements Initializable {
     }
 
     /**
-     * 
+     *
      * @param days -> hier bitte den dayCounter übergeben, bzw. die bisherig Anzahl der gespielten Tage
      * @param playTime -> hier bitte die maximale Spieldauer angeben
      * @return -> true bedeutet dass die maximale Spielzeit erreicht ist
@@ -382,6 +417,14 @@ public class MainFXMLController implements Initializable {
         return days <= playTime;
     }
 
+    /**
+     *
+     * @param tidValue -> Standardwert für das Eingabefeld
+     * @param tidTitle -> Titel für die Alertbox
+     * @param tidHeader -> Header für die Box
+     * @param tidContent -> Content für die Box
+     * @param optionCase -> Welcher Wert des Players? 0: Name 1: Lebenspunkte 2: Agility 3: Cash 4: Spielzeit
+     */
     private void createTextInputDialog(String tidValue, String tidTitle, String tidHeader, String tidContent, int optionCase) {
         TextInputDialog tid = new TextInputDialog(tidValue);
         tid.setTitle(tidTitle);
@@ -412,23 +455,34 @@ public class MainFXMLController implements Initializable {
                     this.optionCash = Double.valueOf(this.temp);
                 }));
                 break;
+            case 4:
+                response.ifPresent((playTime -> {
+                    this.temp = playTime;
+                    this.optionPlayTime = Integer.valueOf(this.temp);
+                }));
+                break;
             default:
                 System.exit(0);
         }
-        if(!response.isPresent()) {
-            System.exit(0);
-        }
     }
 
+    /**
+     *
+     * @param tidTitle -> hier den Titel angeben
+     * @param tidHeader -> hier den Header angeben
+     * @return false -> Standardwerte true -> Anpassen
+     */
     private boolean createTextInputDialog4Options(String tidTitle, String tidHeader) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(tidTitle);
         alert.setHeaderText(tidHeader);
-        alert.setContentText("Möchtest du mit den Standartwerten starten oder diese beliebig anpassen?");
+        alert.setContentText("Möchtest du mit den Standartwerten starten\noder diese beliebig anpassen?");
 
         ButtonType buttonTypeOne = new ButtonType("Standartwerte");
         ButtonType buttonTypeTwo = new ButtonType("Anpassen");
         ButtonType buttonTypeCancel = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
 
         Optional<ButtonType> response = alert.showAndWait();
 
@@ -442,8 +496,28 @@ public class MainFXMLController implements Initializable {
         return false;
     }
 
-    private void showEndGameDialog() {
+    private void showEndGameDialog(String[] cashArray) {
         
+        Alert endgame = new Alert(AlertType.CONFIRMATION);
+        endgame.setTitle("Dopewars");
+        endgame.setHeaderText("Spielende");
+        endgame.setContentText("Hier soll noch ein Chart erscheinen!");
+        
+        ButtonType buttonTypeOne = new ButtonType("Neues Spiel");
+        ButtonType buttonTypeTwo = new ButtonType("Spiel beenden");
+        
+        endgame.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+        
+        Optional<ButtonType> response = endgame.showAndWait();
+        
+        if(response.get() == buttonTypeOne) {
+            Main.main(cashArray);
+        } else if(response.get() == buttonTypeTwo) {
+            System.exit(0);
+        }
+
     }
-    
+
+
+
 }

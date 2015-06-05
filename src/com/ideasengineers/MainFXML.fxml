@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ideasengineers.MainFXMLController">
+<BorderPane prefHeight="685.0" prefWidth="1068.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ideasengineers.MainFXMLController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -15,7 +15,17 @@
                <center>
                   <GridPane hgap="10.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="regionField" text="Region" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+                        <GridPane GridPane.columnIndex="1">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label fx:id="regionField" text="Region" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+                           </children>
+                        </GridPane>
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Cash" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Health" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Label fx:id="cashField" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -28,9 +38,41 @@
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Dmg" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                         <Label fx:id="bankField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                         <Label fx:id="dmgField" text="Label" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                        <Label fx:id="dateField" text="Date" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
-                        <Label text="Space" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
+                        <GridPane GridPane.columnIndex="3">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label fx:id="dateField" text="Date" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+                           </children>
+                        </GridPane>
+                        <Label text="FreeSpace" textAlignment="RIGHT" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
                         <Label fx:id="spaceField" text="Label" GridPane.columnIndex="5" />
+                        <GridPane prefHeight="67.0" prefWidth="175.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Standort" textAlignment="CENTER" GridPane.halignment="RIGHT" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </GridPane>
+                        <Label text="Tag" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -56,13 +98,22 @@
                   <TextArea fx:id="logField" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0">
+            <BorderPane prefHeight="280.0" prefWidth="1068.0">
                <center>
                   <VBox alignment="CENTER" maxWidth="110.0" minWidth="110.0" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="buyBtnAction" contentDisplay="CENTER" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#buyBtnAction" text="Buy -&gt;" textAlignment="CENTER" />
-                        <Button fx:id="sellBtnAction" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#sellBtnAction" text="&lt;- Sell" />
-                        <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#dropBtnAction" text="Drop -&lt;" />
+                        <Button fx:id="buyBtnAction" contentDisplay="CENTER" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#buyBtnAction" text="Buy -&gt;" textAlignment="CENTER">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin></Button>
+                        <Button fx:id="sellBtnAction" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#sellBtnAction" text="&lt;- Sell">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin></Button>
+                        <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#dropBtnAction" text="Drop -&lt;">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin></Button>
                         <Button fx:id="jetBtn" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#jetBtnAction" text="Jet!" />
                      </children>
                      <padding>
@@ -71,19 +122,25 @@
                   </VBox>
                </center>
                <left>
-                  <TableView fx:id="marketTable" prefHeight="180.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="marketTable" prefHeight="180.0" prefWidth="450.0" BorderPane.alignment="CENTER">
                      <columns>
-                        <TableColumn fx:id="nameMarketRow" prefWidth="250.0" text="Name" />
+                        <TableColumn fx:id="nameMarketRow" prefWidth="350.0" text="Name" />
                         <TableColumn fx:id="priceRow" prefWidth="100.0" text="Price" />
                      </columns>
+                     <BorderPane.margin>
+                        <Insets bottom="5.0" left="15.0" top="5.0" />
+                     </BorderPane.margin>
                   </TableView>
                </left>
                <right>
-                  <TableView fx:id="pocketTable" prefHeight="180.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="pocketTable" prefHeight="180.0" prefWidth="450.0" BorderPane.alignment="CENTER">
                      <columns>
-                        <TableColumn fx:id="namePocketRow" prefWidth="300.0" text="Name" />
+                        <TableColumn fx:id="namePocketRow" prefWidth="400.0" text="Name" />
                         <TableColumn fx:id="countRow" prefWidth="50.0" text="Count" />
                      </columns>
+                     <BorderPane.margin>
+                        <Insets bottom="5.0" right="15.0" top="5.0" />
+                     </BorderPane.margin>
                   </TableView>
                </right>
             </BorderPane>
